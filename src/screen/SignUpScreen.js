@@ -36,23 +36,34 @@ const SignUpScreen = ({navigation}) => {
         <Text style={styles.subtitle}>Create an account for more exciting events</Text>
       </View>
       <View style={styles.form}>
-      <Text>Email:</Text>
       <TextInput
-        onChangeText={text => setEmail(text)}
-        value={email}
-        placeholder="Enter your email"
-      />
-      <Text>Password:</Text>
-      <TextInput
-        onChangeText={text => setPassword(text)}
-        value={password}
-        placeholder="Enter your password"
-        secureTextEntry
-      />
-      <Button title="Sign Up" onPress={handleSignUp} />
-      {error ? <Text>{error}</Text> : null}
-          <Text style={styles.link}>Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text></Text>
-
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#a0a0a0"
+          value={email}
+          onChangeText={text => setEmail(text)}
+          clearButtonMode={'unless-editing'}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor="#a0a0a0"
+          value={password}
+          onChangeText={text => setPassword(text)}
+          secureTextEntry
+        />
+        <Pressable 
+          style={styles.button}
+          onPress={handleSignUp}
+          >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </Pressable>
+     
+        <Pressable 
+          onPress={() => navigation.navigate('Login')}
+          >
+          <Text style={styles.link}>Don't have any account yet? <Text style={styles.linkHighlight}>Login</Text></Text>
+        </Pressable>
       </View>
     </ScrollView>
   );
