@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SignUpScreen from './src/screen/SignUpScreen';
-
+import { auth  } from "./src/config/firebase";
 function Profile({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -28,7 +28,7 @@ function EmptyScreen() {
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function Home() {
+function MyApp() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeScreen} />
@@ -39,16 +39,22 @@ function Home() {
 }
 
 function App() {
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
-          component={Home}
+          name="MyApp"
+          component={MyApp}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerStyle: {
+            backgroundColor: '#654dff',
+          },
+          headerTintColor: '#fff',}}/>
         <Stack.Screen name="Signup" component={SignUpScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
