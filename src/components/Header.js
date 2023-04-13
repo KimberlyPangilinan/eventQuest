@@ -1,72 +1,53 @@
-import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import React, { useState,useEffect } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { auth,  } from "../config/firebase";
 
-export const Header = ({title,name})=>  {
- 
-    return (
-      <View className={styles.container}>
-        <Text> {title} </Text>
-        <Text> {name} </Text>
-      </View>
-    )
-  }
-  
+
+export const Header = ({subtitle,message}) => {
+
+  const [isLoggedIn,setIsLoggedIn] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setIsLoggedIn(false);
+      }else{
+        setIsLoggedIn(true);
+      }
+    })
+    return unsubscribe
+  }, [])
+
+
+  return (
+    <View style={styles.header}>
+      <Text style={styles.title}>{subtitle}</Text>
+      {!isLoggedIn? 
+        <Text style={styles.text}>{auth.currentUser?.email}</Text>:
+        <Text style={styles.text}>{message}</Text>
+      }
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  header: {
+    gap:16,
     backgroundColor: '#654dff',
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  welcome: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  form: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '80%',
+    borderBottomLeftRadius:80
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#a0a0a0',
-  },
-  input: {
-    height: 50,
-    minWidth:300,
-    width: '100%',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#a0a0a0',
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  button: {
-    height: 50,
-    minWidth:300,
-    width: '100%',
-    borderRadius: 5,
-    backgroundColor: '#1e90ff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: 'white',
+    fontSize: 20,
     fontWeight: 'bold',
   },
-  link:{
-    margin:8,
-  },
-  linkHighlight:{
-    color:'blue'
+  text:{
+    color:'white'
   }
+  
 });
+
 

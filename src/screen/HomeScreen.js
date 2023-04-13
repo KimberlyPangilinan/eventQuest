@@ -1,71 +1,54 @@
-import React from 'react'
-import { Text, View ,StyleSheet} from 'react-native'
+import React, { useState,useEffect } from 'react'
+import { ScrollView,TextInput,Text, View ,Pressable,StyleSheet} from 'react-native'
 import {Header} from '../components/Header'
+import { collection, addDoc } from "firebase/firestore"; 
+import {db} from '../config/firebase'
+import { auth,  } from "../config/firebase";
 const HomeScreen = () => {
-    return (
-      <View className={styles.container}>
-        <Header name="kimberly" title="Home"/>
-        <Text> textInComponent </Text>
+  const [isLoggedIn,setIsLoggedIn] = useState('');
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setIsLoggedIn(false);
+      }else{
+        setIsLoggedIn(true);
+      }
+    })
+
+    return unsubscribe
+  }, [])
+  // Add a new document with a generated id.
+  const addEvent =async()=>{
+    const docRef = await addDoc(collection(db, "cities"), {
+  name: "Tokyo",
+  country: auth.currentUser?.email
+});
+console.log("Document written with ID: ", docRef.id);
+  }
+
+
+  return (
+    <View style={styles.container}>
+      <Header title="Home Screen" subtitle="Welcome to my app!" />
+      <View style={styles.content}>
+        <Text>This is the content of the home screen.</Text>
+        <Text>Email: {auth.currentUser?.email}</Text>
+        <Pressable onPress={addEvent}><Text>Add</Text></Pressable>
+
       </View>
-    )
-}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#654dff',
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  welcome: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  form: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '80%',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#a0a0a0',
-  },
-  input: {
-    height: 50,
-    minWidth:300,
-    width: '100%',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#a0a0a0',
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  button: {
-    height: 50,
-    minWidth:300,
-    width: '100%',
-    borderRadius: 5,
-    backgroundColor: '#1e90ff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  link:{
-    margin:8,
-  },
-  linkHighlight:{
-    color:'blue'
-  }
 });
 export default HomeScreen;

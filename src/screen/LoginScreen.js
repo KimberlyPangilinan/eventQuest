@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
 import { View, ScrollView, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {signInWithEmailAndPassword } from "firebase/auth";
 import { auth,  } from "../config/firebase";
 
@@ -11,26 +10,26 @@ const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.replace("Profile")
+        navigation.replace("MyApp")
       }
     })
-
     return unsubscribe
   }, [])
+
   const handleSignIn =()=>{
     signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    console.log('Logged with:', user.email);
-  })
-  .catch(error => alert(error.message))
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      console.log('Logged with:', user.email);
+    })
+   .catch(error => alert(error.message))
   }
  
   return (
     <ScrollView keyboardDismissMode='interactive' contentContainerStyle={styles.container}>
       <View style={styles.welcome}>
-        <Text style={styles.title}>Welcome back!</Text>
+        <Text style={styles.title}>EventQuest</Text>
         <Text style={styles.subtitle}>Please login to continue.</Text>
       </View>
       <View style={styles.form}>
@@ -75,13 +74,13 @@ const styles = StyleSheet.create({
   },
   welcome: {
     
-    flex: 2,
+    flex: 1.2,
     justifyContent: 'center',
     alignItems: 'center',
   },
   form: {
     backgroundColor: '#fff',
-    borderTopLeftRadius:100,
+    borderTopLeftRadius:64,
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
@@ -99,26 +98,26 @@ const styles = StyleSheet.create({
     color:'#fff',
   },
   input: {
-    height: 50,
-    minWidth:300,
-    width: '100%',
+    height: 40,
+    minWidth:100,
+    width: '88%',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#a0a0a0',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     marginBottom: 10,
     backgroundColor:'#fff9',
     borderRadius:100
   },
   button: {
     height: 50,
-    minWidth:300,
-    width: '100%',
+    minWidth:100,
+    width: '88%',
     borderRadius: 100,
     backgroundColor: '#654dff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical:50
+    marginTop:80
   },
   buttonText: {
     color: '#fff',
@@ -126,7 +125,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   link:{
-    margin:8,
+    marginTop:32,
   },
   linkHighlight:{
     color:'blue'

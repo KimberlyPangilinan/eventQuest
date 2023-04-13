@@ -1,12 +1,8 @@
 import React, { useState,useEffect } from 'react';
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-
 import { View, ScrollView,Button, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth,  } from "../config/firebase";
-
-
 
 const SignUpScreen = ({navigation}) => {
 
@@ -19,7 +15,6 @@ const SignUpScreen = ({navigation}) => {
   }, [])
 
   const handleSignUp =()=>{
-    
     createUserWithEmailAndPassword( auth,email, password)
     .then(userCredentials => {
       const user = userCredentials.user;
@@ -28,12 +23,11 @@ const SignUpScreen = ({navigation}) => {
     .catch(error => alert(error.message))
   }
  
-
   return (
     <ScrollView keyboardDismissMode='interactive' contentContainerStyle={styles.container}>
       <View style={styles.welcome}>
-        <Text style={styles.title}>Join Us in Quests Hunting</Text>
-        <Text style={styles.subtitle}>Create an account for more exciting events</Text>
+        <Text style={styles.title}>EventQuest</Text>
+        <Text style={styles.subtitle}>Create an account for more</Text>
       </View>
       <View style={styles.form}>
       <TextInput
@@ -62,7 +56,7 @@ const SignUpScreen = ({navigation}) => {
         <Pressable 
           onPress={() => navigation.navigate('Login')}
           >
-          <Text style={styles.link}>Don't have any account yet? <Text style={styles.linkHighlight}>Login</Text></Text>
+          <Text style={styles.link}>Already have an account? <Text style={styles.linkHighlight}>Login</Text></Text>
         </Pressable>
       </View>
     </ScrollView>
@@ -72,48 +66,57 @@ const SignUpScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#654dff',
     justifyContent: 'center',
     alignItems: 'center',
   },
   welcome: {
-    flex: 2,
+    
+    flex: 1.2,
     justifyContent: 'center',
     alignItems: 'center',
   },
   form: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius:64,
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '80%',
+    width: '100%',
+    padding:'10%'
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 16,
+    color:'#fff',
   },
   subtitle: {
     fontSize: 18,
-    color: '#a0a0a0',
+    color:'#fff',
+    marginBottom: 8,
   },
   input: {
-    height: 50,
-    minWidth:300,
-    width: '100%',
+    height: 40,
+    minWidth:100,
+    width: '88%',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#a0a0a0',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     marginBottom: 10,
+    backgroundColor:'#fff',
+    borderRadius:100
   },
   button: {
     height: 50,
-    minWidth:300,
-    width: '100%',
-    borderRadius: 5,
-    backgroundColor: '#1e90ff',
+    minWidth:100,
+    width: '88%',
+    borderRadius: 100,
+    backgroundColor: '#654dff',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop:80
   },
   buttonText: {
     color: '#fff',
@@ -121,7 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   link:{
-    margin:8,
+    margin:32,
   },
   linkHighlight:{
     color:'blue'
