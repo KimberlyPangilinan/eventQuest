@@ -43,7 +43,15 @@ const EventItem = ({title}) => {
     unsubscribe();
   };
 }, []);
-const renderItem = ({item}) => <Item name = {item.name} id={item.id}/>
+const renderItem = ({item}) => <Item name = {item.name} id={item.id}
+      onPress={() => {setSelectedId(item.id)
+            navigation.navigate('Details', {
+            itemId: item.id,
+            otherParam: 'anything you want here',
+          });
+        
+        }}
+/>
   return (
     <View style={styles.container}>
     <Header1 title={title}/>
