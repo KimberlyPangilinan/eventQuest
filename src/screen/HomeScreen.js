@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, FlatList, TextInput, Text, View, Pressable, StyleSheet } from 'react-native';
+import { ScrollView, FlatList, TextInput, Text,Button, View, Pressable, StyleSheet } from 'react-native';
 import { Header } from '../components/Header';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db } from '../config/firebase';
@@ -18,16 +18,16 @@ const Seperator =()=> <View style={{borderBottomWidth:0.5,borderColor:'#3c343d'}
 const Header1 =()=> <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>Menu</Text></View>
 
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const [cities, setCities] = useState([]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        setIsLoggedIn(false);
-      } else {
         setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
       }
     });
   
@@ -59,12 +59,33 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <Header title="Home Screen" subtitle="Welcome to my app!" />
       <View style={styles.content}>
-        <Text>This is the content of the home screen.</Text>
-        <Text>Email: {auth.currentUser?.email}</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => {
+          /* 1. Navigate to the Details route with params */
+          navigation.navigate('Details', {
+            itemId: 86,
+            otherParam: 'anything you want here',
+          });
+        }}
+      />
+      {isLoggedIn?
+      <View>
+      <Text>Email: {auth.currentUser?.email}</Text>
         <Pressable onPress={addEvent}><Text>Add</Text></Pressable>
 
-        <EventItem/>
-        <EventItem/>
+        <EventItem title="Recent Events"/>
+        <EventItem title="Upcoming Events"/>
+      </View> :
+      <View>
+     
+        <EventItem title="Recent Events"/>
+  
+      </View>
+
+      }
+
+       
       </View>
     </View>
   );

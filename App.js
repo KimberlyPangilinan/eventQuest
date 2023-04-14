@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SignUpScreen from './src/screen/SignUpScreen';
 import { auth  } from "./src/config/firebase";
 import EventScreen from './src/screen/EventScreen';
+import DetailsScreen from './src/screen/DetailsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 
@@ -88,10 +89,12 @@ function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Signup" component={SignUpScreen} options={{headerStyle: {
             backgroundColor: '#654dff',
           },
           headerTintColor: '#fff',}}/>
+          
       </Stack.Navigator>
     </NavigationContainer>
   );

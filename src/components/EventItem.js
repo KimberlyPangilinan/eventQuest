@@ -14,11 +14,11 @@ const Item = ({name,id}) => (
     </View>
   )
   const Seperator =()=> <View style={{borderBottomWidth:0.5,borderColor:'#3c343d'}}/>
-  const Header1 =()=> <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>Menu</Text></View>
+  const Header1 =({title})=> <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>{title}</Text></View>
   const Footer1 =()=> <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>View More</Text></View>
 
   
-const EventItem = ({condition}) => {
+const EventItem = ({title}) => {
     const [isLoggedIn, setIsLoggedIn] = useState('');
     const [cities, setCities] = useState([]);
   
@@ -46,12 +46,13 @@ const EventItem = ({condition}) => {
 const renderItem = ({item}) => <Item name = {item.name} id={item.id}/>
   return (
     <View style={styles.container}>
+    <Header1 title={title}/>
            <FlatList 
         data={cities} 
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Seperator}
-        ListHeaderComponent={Header1}
+       
         ListFooterComponent={Footer1}
       />
     </View>
