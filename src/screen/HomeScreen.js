@@ -4,8 +4,8 @@ import { Header } from '../components/Header';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db } from '../config/firebase';
 import { auth } from "../config/firebase";
-import { doc, getDoc } from "firebase/firestore";
 import {  onSnapshot, query, where, } from "firebase/firestore";
+import EventItem from '../components/EventItem';
 
 
 const Item = ({name,id}) => (
@@ -30,14 +30,8 @@ const HomeScreen = () => {
         setIsLoggedIn(true);
       }
     });
-    const q = query(collection(db, "cities"));
-    const unsubscribeCities = onSnapshot(q, (querySnapshot) => {
-      const cities = [];
-      querySnapshot.forEach((doc) => {
-          cities.push({id: doc.id, ...doc.data()});
-      });
-  setCities(cities);
-});
+  
+
    
   //  const unsubscribeCities = onSnapshot(collection(db, "cities"), (querySnapshot) => {
   //    const cityData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -69,13 +63,8 @@ const HomeScreen = () => {
         <Text>Email: {auth.currentUser?.email}</Text>
         <Pressable onPress={addEvent}><Text>Add</Text></Pressable>
 
-        <FlatList 
-        data={cities} 
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={Seperator}
-        ListHeaderComponent={Header1}
-      />
+        <EventItem/>
+        <EventItem/>
       </View>
     </View>
   );

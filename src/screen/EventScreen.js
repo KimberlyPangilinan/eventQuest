@@ -1,13 +1,16 @@
 import React from 'react'
 import { ScrollView,TextInput,Text, View ,Pressable,StyleSheet} from 'react-native'
 import {Header} from '../components/Header'
+import EventItem from '../components/EventItem';
 
 const EventScreen = () => {
   return (
     <View style={styles.container}>
-      <Header subtitle="Events Treasure Chest" message="You must sign in first to view your saved events"  />
+      <Header subtitle="My Saved Events" message="You must sign in first to view your saved events"  />
       <View style={styles.content}>
-        <Text>This is the content of the home screen.</Text>
+        
+        <EventItem/>
+        <EventItem/>
       </View>
     </View>
   );
@@ -19,7 +22,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   content: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },

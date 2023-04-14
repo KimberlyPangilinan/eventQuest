@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SignUpScreen from './src/screen/SignUpScreen';
 import { auth  } from "./src/config/firebase";
 import EventScreen from './src/screen/EventScreen';
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 
 function Profile({ navigation }) {
@@ -36,16 +37,45 @@ function MyApp() {
     <Tab.Navigator 
       screenOptions={{headerStyle: {backgroundColor: '#654dff'},
       headerTintColor: '#fff',}}>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Events" component={EventScreen} />
-      <Tab.Screen name="More" component={ProfileScreen} />
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" color={color} size={16} />
+            ),
+          }}
+        />
+      <Tab.Screen 
+        name="Create" 
+        component={ProfileScreen}
+        options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="create" color={color} size={16} />
+            ),
+          }} />
+      <Tab.Screen 
+        name="Events" 
+        component={EventScreen} 
+        options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="albums" color={color} size={16} />
+            ),
+          }}
+        />
+      <Tab.Screen
+        name="Account" 
+        component={ProfileScreen}
+        options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person" color={color} size={16} />
+            ),
+          }} />
     </Tab.Navigator>
   );
 }
 
 function App() {
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerStyle: {
