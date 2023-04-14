@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
 
   
   return () => {
-    unsubscribeCities();
+    
     unsubscribe();
   };
 }, []);
@@ -45,8 +45,8 @@ const HomeScreen = ({ navigation }) => {
   const renderItem = ({item}) => <Item name = {item.name} id={item.id}/>
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Header title="Home Screen" subtitle="Welcome to my app!" />
+    <View style={styles.container}>
+      <Header type="xl" title="Home Screen" subtitle="Welcome to my app!" />
       <View style={styles.content}>
         <Button
           title="Go to Details"
@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
           </View>
         }
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

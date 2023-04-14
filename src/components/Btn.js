@@ -20,7 +20,7 @@ export const Btn = ({type,name,onPress}) => {
 const styles = StyleSheet.create({
   button: {
     height: 40,
-    borderRadius: 100,
+    borderRadius: 8,
     backgroundColor: '#654dff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   btnSecondary:{
     height: 40,
-    borderRadius: 100,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: '#654dff',
     justifyContent: 'center',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     minWidth:180,
-    width:256,
+    width:320,
     fontSize: 18,
     fontWeight: 'normal',
     textAlign:'center'
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   buttonTextSecondary: {
     color: '#654dff',
     minWidth:180,
-    width:256,
+    width:320,
     fontSize: 18,
     fontWeight: 'normal',
     textAlign:'center'

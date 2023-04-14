@@ -25,6 +25,7 @@ const DATA = [
 
 const Item = ({item, onPress, backgroundColor, textColor}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
+    <Text style={[styles.number, {color: textColor}]}>80</Text>
     <Text style={[styles.title, {color: textColor}]}>{item.title}</Text>
   </TouchableOpacity>
 );
@@ -33,7 +34,7 @@ const CardList = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState();
 
   const renderItem = ({item,handle}) => {
-    const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
+    const backgroundColor = item.id === selectedId ? '#7865f0' : '#f1f0f4' ;
     const color = item.id === selectedId ? 'white' : 'black';
 
     return (
@@ -73,15 +74,26 @@ const CardList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    marginTop: 48,
   },
   item: {
+    height:164,
+    minWidth:320,
     padding: 20,
     marginVertical: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 32,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#c7c4ce',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-    fontSize: 32,
+    fontSize: 16
+  },
+  number: {
+    fontSize: 24,
+    fontWeight:'bold'
   },
 });
 

@@ -1,7 +1,7 @@
 
 import LoginScreen from './src/screen/LoginScreen';
 import HomeScreen from './src/screen/HomeScreen';
-import ProfileScreen from './src/screen/ProfileScreen';
+import ProfileScreen, { EditScreen } from './src/screen/ProfileScreen';
 import * as React from 'react';
 import { Button, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import { auth  } from "./src/config/firebase";
 import EventScreen from './src/screen/EventScreen';
 import DetailsScreen from './src/screen/DetailsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons'
+import CreateScreen from './src/screen/CreateScreen';
 
 
 function Profile({ navigation }) {
@@ -49,7 +50,7 @@ function MyApp() {
         />
       <Tab.Screen 
         name="Create" 
-        component={ProfileScreen}
+        component={CreateScreen}
         options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="create" color={color} size={16} />
@@ -90,6 +91,7 @@ function App() {
         />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="EditScreen" component={EditScreen} />
         <Stack.Screen name="Signup" component={SignUpScreen} options={{headerStyle: {
             backgroundColor: '#654dff',
           },

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { auth,  } from "../config/firebase";
 
 
-export const Header = ({subtitle,message}) => {
+export const Header = ({subtitle,message,type}) => {
 
   const [isLoggedIn,setIsLoggedIn] = useState('');
 
@@ -20,7 +20,7 @@ export const Header = ({subtitle,message}) => {
 
 
   return (
-    <View style={styles.header}>
+    <View style={type==="xl"?styles.headerXl: styles.header}>
       <Text style={styles.title}>{subtitle}</Text>
       {!isLoggedIn? 
         <Text style={styles.text}>{auth.currentUser?.email}</Text>:
@@ -32,6 +32,14 @@ export const Header = ({subtitle,message}) => {
 
 const styles = StyleSheet.create({
   header: {
+    gap:16,
+    backgroundColor: '#654dff',
+    height: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomLeftRadius:80
+  },
+  headerXl: {
     gap:16,
     backgroundColor: '#654dff',
     height: 200,
