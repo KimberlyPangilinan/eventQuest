@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight:'80%'
+    minHeight:400
   },
 });
 

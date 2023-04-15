@@ -63,9 +63,6 @@ const CardList = ({ navigation }) => {
         extraData={selectedId}
        
       />
-           {selectedId?
-      <Text>{selectedId}</Text>:<Text>ddd</Text>
-      }
     </SafeAreaView>
   );
 };

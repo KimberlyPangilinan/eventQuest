@@ -23,7 +23,7 @@ const Header1 =({title})=>
   
 const Footer1 =()=> 
     <View  style={styles.MenuContainer}>
-      <Btn name="name"/>
+      <Btn type="btnSecondary" name="View More"/>
     </View>
 
   
@@ -41,6 +41,7 @@ const EventItem = ({title,navigation}) => {
         }
       });
       const q = query(collection(db, "events"), limit(3), orderBy("datePosted", "asc"));
+      const q1 = query(collection(db, "events"), limit(3), orderBy("when", "asc"));
       const unsubscribeCities = onSnapshot(q, (querySnapshot) => {
         const cities = [];
         querySnapshot.forEach((doc) => {
@@ -56,8 +57,7 @@ const EventItem = ({title,navigation}) => {
 
 
     const renderItem = ({item}) => {
-      const backgroundColor = item.id === selectedId ? '#7865f0' : '#f1f0f4' ;
-      const color = item.id === selectedId ? 'white' : 'black';
+
       return(
           <Item title = {item.title} id={item.id}
                 onPress={() => {setSelectedId(item.id)
@@ -65,8 +65,7 @@ const EventItem = ({title,navigation}) => {
                 itemId: item.id,
                 otherParam: 'anything you want here',
                 });}}
-                backgroundColor={backgroundColor}
-                textColor={color}
+               
           />)
       }
 return (
@@ -113,7 +112,8 @@ const styles = StyleSheet.create({
   itemMenu: {
     color: 'black',
     fontSize: 16,
-    textAlign:'center'
+    textAlign:'center',
+    fontWeight:'bold'
   },
   MenuContainer: {
     
