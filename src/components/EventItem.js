@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, FlatList, TextInput, Text, View, Pressable, StyleSheet } from 'react-native';
+import { ScrollView, FlatList, TextInput,TouchableOpacity, Text, View, Button,Pressable, StyleSheet } from 'react-native';
 import { Header } from '../components/Header';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db } from '../config/firebase';
 import { auth } from "../config/firebase";
-import { limit, onSnapshot, query, where, } from "firebase/firestore";
+import { limit, onSnapshot, query, orderBy ,where, } from "firebase/firestore";
+import { Btn } from './Btn';
 
-
-const Item = ({name,id}) => (
-    <View style={styles.innerContainer}>
-      <Text style={styles.itemText}>{name}</Text>
-      <Text>{id}</Text>
-    </View>
-  )
-  const Seperator =()=> <View style={{borderBottomWidth:0.5,borderColor:'#3c343d'}}/>
-  const Header1 =({title})=> <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>{title}</Text></View>
-  const Footer1 =()=> <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>View More</Text></View>
 
   
-const EventItem = ({title}) => {
+const Item = ({title,id, onPress, backgroundColor, textColor}) => (
+    <TouchableOpacity onPress={onPress} style={[styles.innerContainer, {backgroundColor}]}>
+        <Text style={styles.itemText}>{title}</Text>
+        <Text>{id}</Text>
+    </TouchableOpacity>)
+  
+const Seperator =()=> 
+    <View style={{borderBottomWidth:0.5,borderColor:'#cbcad6'}}/>
+  
+const Header1 =({title})=> 
+    <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>{title}</Text></View>
+  
+const Footer1 =()=> 
+    <View  style={styles.MenuContainer}>
+      <Btn name="name"/>
+    </View>
+
+  
+const EventItem = ({title,navigation}) => {
     const [isLoggedIn, setIsLoggedIn] = useState('');
     const [cities, setCities] = useState([]);
+    const [selectedId, setSelectedId] = useState();
   
     useEffect(() => {
       const unsubscribe = auth.onAuthStateChanged(user => {
@@ -30,7 +40,7 @@ const EventItem = ({title}) => {
           setIsLoggedIn(true);
         }
       });
-      const q = query(collection(db, "cities"), limit(3));
+      const q = query(collection(db, "events"), limit(3), orderBy("datePosted", "asc"));
       const unsubscribeCities = onSnapshot(q, (querySnapshot) => {
         const cities = [];
         querySnapshot.forEach((doc) => {
@@ -42,20 +52,27 @@ const EventItem = ({title}) => {
     unsubscribeCities();
     unsubscribe();
   };
-}, []);
-const renderItem = ({item}) => <Item name = {item.name} id={item.id}
-      onPress={() => {setSelectedId(item.id)
-            navigation.navigate('Details', {
-            itemId: item.id,
-            otherParam: 'anything you want here',
-          });
-        
-        }}
-/>
-  return (
+    }, []);
+
+
+    const renderItem = ({item}) => {
+      const backgroundColor = item.id === selectedId ? '#7865f0' : '#f1f0f4' ;
+      const color = item.id === selectedId ? 'white' : 'black';
+      return(
+          <Item title = {item.title} id={item.id}
+                onPress={() => {setSelectedId(item.id)
+                navigation.navigate('Details', {
+                itemId: item.id,
+                otherParam: 'anything you want here',
+                });}}
+                backgroundColor={backgroundColor}
+                textColor={color}
+          />)
+      }
+return (
     <View style={styles.container}>
     <Header1 title={title}/>
-           <FlatList 
+    <FlatList 
         data={cities} 
         renderItem={renderItem}
         keyExtractor={item => item.id}
@@ -69,7 +86,7 @@ const renderItem = ({item}) => <Item name = {item.name} id={item.id}
 
 const styles = StyleSheet.create({
     container: {
-        height:'80%',
+        height:'100%',
       flex: 1,
       backgroundColor: '#fff',
     },
@@ -77,6 +94,16 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      height:'60%',
+      width:'100%'
+    },
+    innerContainer:{
+      padding:8,
+      width:'100%',
+      maxWidth:320,
+      flexDirection:'row',
+      justifyContent:'space-between',
+      minWidth:320
     },
     
   itemText: {

@@ -26,21 +26,11 @@ const HomeScreen = ({ navigation }) => {
       }
     });
 
-  
   return () => {
-    
     unsubscribe();
   };
 }, []);
 
-  // Add a new document with a generated id.
-  const addEvent = async () => {
-    const docRef = await addDoc(collection(db, "cities"), {
-      name: "Tokyo",
-      country: auth.currentUser?.email
-    });
-    console.log("Document written with ID: ", docRef.id);
-  };
 
   const renderItem = ({item}) => <Item name = {item.name} id={item.id}/>
 
@@ -48,22 +38,10 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Header type="xl" title="Home Screen" subtitle="Welcome to my app!" />
       <View style={styles.content}>
-        <Button
-          title="Go to Details"
-          onPress={() => {
-            /* 1. Navigate to the Details route with params */
-            navigation.navigate('Details', {
-              itemId: 86,
-              otherParam: 'anything you want here',
-            });
-          }}
-        />
         {isLoggedIn?
           <View>
-            <Text>Email: {auth.currentUser?.email}</Text>
-            <Pressable onPress={addEvent}><Text>Add</Text></Pressable>
-            <EventItem title="Recent Events"/>
-            <EventItem title="Upcoming Events"/>
+            <EventItem title="Recent Events"  navigation={navigation}/>
+            <EventItem title="Upcoming Events"  navigation={navigation}/>
           </View> :
           <View>
             <EventItem title="Recent Events"/>
@@ -83,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    height:'80%'
+    minHeight:'80%'
   },
 });
 
