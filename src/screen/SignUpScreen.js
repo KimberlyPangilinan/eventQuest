@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, ScrollView,Button, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, ScrollView,Button, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth,  } from "../config/firebase";
@@ -19,6 +19,16 @@ const SignUpScreen = ({navigation}) => {
     .then(userCredentials => {
       const user = userCredentials.user;
       console.log('Registered with:', user.email);
+      Alert.alert(
+        "Successful",
+        "You will be automatically logged in",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("MyApp")
+          }
+        ]
+      );
     })
     .catch(error => alert(error.message))
   }

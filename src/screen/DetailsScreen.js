@@ -1,17 +1,27 @@
 import * as React from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button,StyleSheet } from 'react-native';
+import { Btn } from '../components/Btn';
 
 export default function DetailsScreen({ route, navigation }) {
   /* 2. Get the param */
   const { itemId } = route.params;
-  const { otherParam } = route.params;
+  const { description } = route.params;
+  const { title } = route.params;
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Text>itemId: {JSON.stringify(itemId)}</Text>
-      <Text>otherParam: {JSON.stringify(otherParam)}</Text>
-     
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' , padding:16}}>
+      <Text style={styles.heading}>{title}</Text>
+      <Text>itemId: {itemId}</Text>
+      <Text>otherParam: {JSON.stringify(description)}</Text>
+     <Btn name="Register"/>
      
     </View>
   );
 }
+
+const styles= StyleSheet.create({
+  heading: {
+    fontWeight:'bold',
+    textAlign:'left',
+    fontSize:24
+  }
+})

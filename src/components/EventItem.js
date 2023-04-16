@@ -14,11 +14,13 @@ const Item = ({title,id,description, onPress, backgroundColor, textColor}) => (
      <Image source={{uri: 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg'}}
        style={styles.itemImage} />
        <View style={styles.itemInfo}>
-       <View style={styles.itemHeader}>
-       <Text style={styles.itemTitle}>{title}</Text>
-       </View>
-     
-        <Text  style={styles.itemText}>{description}</Text>
+        <View style={styles.itemHeader}>
+          <Text style={styles.itemTitle}>{title}</Text>
+        </View>
+        <View>
+          <Text  style={styles.itemText}>{description}</Text>
+        </View>
+       
        </View>
        
     </TouchableOpacity>)
@@ -37,9 +39,9 @@ const Footer1 =({handleNumber})=>
   
 const EventItem = ({title,navigation}) => {
     const [isLoggedIn, setIsLoggedIn] = useState('');
-    const [cities, setCities] = useState([]);
+    const [events, setevents] = useState([]);
     const [selectedId, setSelectedId] = useState();
-    const [limitValue, setLimitValue] = useState(6);
+    const [limitValue, setLimitValue] = useState(3);
     useEffect(() => {
       const unsubscribe = auth.onAuthStateChanged(user => {
         if (user) {
@@ -49,31 +51,31 @@ const EventItem = ({title,navigation}) => {
         }
       });
       const q = query(collection(db, "events"), limit(limitValue), orderBy("datePosted", "asc"));
-      const q1 = query(collection(db, "events"), limit(3), orderBy("when", "asc"));
-      const unsubscribeCities = onSnapshot(q, (querySnapshot) => {
-        const cities = [];
+      const unsubscribeevents = onSnapshot(q, (querySnapshot) => {
+        const events = [];
         querySnapshot.forEach((doc) => {
-            cities.push({id: doc.id, ...doc.data()});
+            events.push({id: doc.id, ...doc.data()});
         });
-    setCities(cities);
+    setevents(events);
   });
   return () => {
-    unsubscribeCities();
+    unsubscribeevents();
     unsubscribe();
   };
     }, [limitValue]);
     const handleNumber = () => {
-      setLimitValue(prevLimitValue => prevLimitValue + 10); // increase limitValue by 10 on button press
+      setLimitValue(prevLimitValue => prevLimitValue + 5); // increase limitValue by 10 on button press
     }
 
     const renderItem = ({item}) => {
 
       return(
-          <Item title = {item.title} id={item.id} description={item.description}
+          <Item title = {item.title} id={item.id} description={item.description} email={item.email}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
-                otherParam: 'anything you want here',
+                description:item.description,
+                title:item.title
                 });}}
                
           />)
@@ -82,7 +84,7 @@ return (
     <View style={styles.container}>
     <Header1 title={title}/>
     <FlatList 
-        data={cities} 
+        data={events} 
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Seperator}
@@ -94,18 +96,7 @@ return (
 }
 
 const styles = StyleSheet.create({
-    container: {
-        height:'100%',
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    content: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      height:'60%',
-      width:'100%'
-    },
+
     innerContainer:{
       padding:8,
       width:'100%',

@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header type="xl" title="Home Screen" subtitle="Welcome to my app!" />
+      <Header type="xl" title="Home Screen" subtitle="Welcome to EventQuest!" />
       <View style={styles.content}>
         
           <View>
@@ -53,10 +53,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   content: {
+    flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight:400
+
   },
 });
 

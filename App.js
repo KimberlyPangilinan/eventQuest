@@ -74,10 +74,7 @@ function App() {
   return (
     <NavigationContainer>
    
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        >      
+     
          <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }}>
             <Stack.Screen name="MyApp" component={MyApp} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={LoginScreen} />
@@ -86,7 +83,7 @@ function App() {
             <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }} />
           </Stack.Navigator>
     
-      </ScrollView>
+      
 
 
     </NavigationContainer>

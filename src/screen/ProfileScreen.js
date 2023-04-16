@@ -1,14 +1,14 @@
 
 
 import React, { useState,useEffect } from 'react';
-import {Image, Pressable,Button, View,ScrollView, TextInput, Text,StyleSheet } from 'react-native';
+import {Image, Pressable,Button, View,ScrollView, TextInput, Text,StyleSheet,Alert } from 'react-native';
 import { auth,  } from "../config/firebase";
 import {  signOut } from "firebase/auth";
 import {Header} from '../components/Header'
 import { Btn } from '../components/Btn';
 import { collection, addDoc, getDocs, where, query, doc, updateDoc } from 'firebase/firestore';
 import { db} from '../config/firebase';
-export const EditScreen = () => {
+export const EditScreen = ({navigation}) => {
 
   const [name, setName] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -37,12 +37,23 @@ export const EditScreen = () => {
       const doc = querySnapshot.docs[0];
       await updateDoc(doc.ref, { name,address,occupation, updatedAt: new Date(), });
       console.log("Document updated with ID: ", doc.id);
+      Alert.alert(
+        "Successful",
+        "Your profile is saved",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("Personal Information")
+          }
+        ]
+      );
     } else {
       const docRef = await addDoc(collection(db, "userProfile"), {
         name, address,occupation,
         email: auth.currentUser?.email,
       });
       console.log("Document written with ID: ", docRef.id);
+      alert("Profile successfully saved");
     }
   };
 
