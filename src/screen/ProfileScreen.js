@@ -48,7 +48,7 @@ export const EditScreen = () => {
 
   return (
     <View style={styles.content}>
-    <Text style={styles.heading}>Personal Information</Text>
+    <Text style={styles.heading}>{name?name: "Hello User"}</Text>
     <Image source={{uri: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
        style={{width: 100, height: 100,borderRadius:100}} />
     <View>
@@ -90,7 +90,7 @@ export default function ProfileScreen({ navigation }) {
       }
     };
     fetchProfile();
-  }, []);
+  }, [name,navigation]);
   const handleSignOut=()=>{
     signOut(auth).then(() => {
       console.log('sign out');
@@ -127,12 +127,11 @@ export default function ProfileScreen({ navigation }) {
               
               <Image source={{uri: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
        style={{width: 100, height: 100,borderRadius:100}} />
-        <Text style={styles.heading}>{name} </Text>
-              <Text>Email: {auth.currentUser?.email}</Text>
+        <Text style={styles.heading}>{auth.currentUser?.email} </Text>
               <Text>UserID: {auth.currentUser?.uid}</Text>
               <Btn  name="Edit Profile" onPress={() => {
             /* 1. Navigate to the Details route with params */
-            navigation.navigate('EditScreen');
+            navigation.navigate('Personal Information');
           }} />
               <Btn type="btnSecondary" name="Logout" onPress={handleSignOut}/>
             </View>

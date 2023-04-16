@@ -38,15 +38,10 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Header type="xl" title="Home Screen" subtitle="Welcome to my app!" />
       <View style={styles.content}>
-        {isLoggedIn?
+        
           <View>
             <EventItem title="Recent Events"  navigation={navigation}/>
-            <EventItem title="Upcoming Events"  navigation={navigation}/>
-          </View> :
-          <View>
-            <EventItem title="Recent Events"/>
-          </View>
-        }
+          </View> 
       </View>
     </View>
   );

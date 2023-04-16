@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, FlatList, TextInput,TouchableOpacity, Text, View, Button,Pressable, StyleSheet } from 'react-native';
+import { ScrollView, FlatList, TextInput,TouchableOpacity, Text, View, Button,Pressable, StyleSheet,Image } from 'react-native';
 import { Header } from '../components/Header';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db } from '../config/firebase';
@@ -9,10 +9,18 @@ import { Btn } from './Btn';
 
 
   
-const Item = ({title,id, onPress, backgroundColor, textColor}) => (
+const Item = ({title,id,description, onPress, backgroundColor, textColor}) => (
     <TouchableOpacity onPress={onPress} style={[styles.innerContainer, {backgroundColor}]}>
-        <Text style={styles.itemText}>{title}</Text>
-        <Text>{id}</Text>
+     <Image source={{uri: 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg'}}
+       style={styles.itemImage} />
+       <View style={styles.itemInfo}>
+       <View style={styles.itemHeader}>
+       <Text style={styles.itemTitle}>{title}</Text>
+       </View>
+     
+        <Text  style={styles.itemText}>{description}</Text>
+       </View>
+       
     </TouchableOpacity>)
   
 const Seperator =()=> 
@@ -21,9 +29,9 @@ const Seperator =()=>
 const Header1 =({title})=> 
     <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>{title}</Text></View>
   
-const Footer1 =()=> 
+const Footer1 =({handleNumber})=> 
     <View  style={styles.MenuContainer}>
-      <Btn type="btnSecondary" name="View More"/>
+      <Btn type="btnSecondary" name="View More" onPress={handleNumber}/>
     </View>
 
   
@@ -31,7 +39,7 @@ const EventItem = ({title,navigation}) => {
     const [isLoggedIn, setIsLoggedIn] = useState('');
     const [cities, setCities] = useState([]);
     const [selectedId, setSelectedId] = useState();
-  
+    const [limitValue, setLimitValue] = useState(6);
     useEffect(() => {
       const unsubscribe = auth.onAuthStateChanged(user => {
         if (user) {
@@ -40,7 +48,7 @@ const EventItem = ({title,navigation}) => {
           setIsLoggedIn(true);
         }
       });
-      const q = query(collection(db, "events"), limit(3), orderBy("datePosted", "asc"));
+      const q = query(collection(db, "events"), limit(limitValue), orderBy("datePosted", "asc"));
       const q1 = query(collection(db, "events"), limit(3), orderBy("when", "asc"));
       const unsubscribeCities = onSnapshot(q, (querySnapshot) => {
         const cities = [];
@@ -53,13 +61,15 @@ const EventItem = ({title,navigation}) => {
     unsubscribeCities();
     unsubscribe();
   };
-    }, []);
-
+    }, [limitValue]);
+    const handleNumber = () => {
+      setLimitValue(prevLimitValue => prevLimitValue + 10); // increase limitValue by 10 on button press
+    }
 
     const renderItem = ({item}) => {
 
       return(
-          <Item title = {item.title} id={item.id}
+          <Item title = {item.title} id={item.id} description={item.description}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
@@ -77,7 +87,7 @@ return (
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Seperator}
        
-        ListFooterComponent={Footer1}
+        ListFooterComponent={<Footer1 handleNumber={handleNumber} />}
       />
     </View>
   )
@@ -104,10 +114,28 @@ const styles = StyleSheet.create({
       justifyContent:'space-between',
       minWidth:320
     },
-    
+    itemInfo:{
+      flexDirection:'column', gap:16,width:'100%',flexGrow:1,marginLeft:8
+    },
+    itemImage:{
+      width: 100, height: 100,borderRadius:8
+    },
+    itemTitle:{
+      flexGrow:1,
+      color: 'black',
+      fontSize: 18,
+      textAlign:'left',
+      fontWeight:'bold',
+      maxWidth:'60%'
+    },
   itemText: {
     color: 'black',
     fontSize: 16,
+    maxWidth:'64%'
+    
+  },
+  itemHeader:{
+    flex:1
   },
   itemMenu: {
     color: 'black',
