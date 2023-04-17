@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, FlatList, TextInput,TouchableOpacity, Text, View, Button,Pressable, StyleSheet,Image } from 'react-native';
-import { Header } from '../components/Header';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db } from '../config/firebase';
 import { auth } from "../config/firebase";
@@ -56,13 +55,14 @@ const EventItem = ({title,navigation}) => {
         querySnapshot.forEach((doc) => {
             events.push({id: doc.id, ...doc.data()});
         });
-    setevents(events);
-  });
-  return () => {
-    unsubscribeevents();
-    unsubscribe();
-  };
+      setevents(events);
+    });
+    return () => {
+      unsubscribeevents();
+      unsubscribe();
+    };
     }, [limitValue]);
+    
     const handleNumber = () => {
       setLimitValue(prevLimitValue => prevLimitValue + 5); // increase limitValue by 10 on button press
     }
@@ -88,7 +88,7 @@ return (
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Seperator}
-       
+        showsVerticalScrollIndicator={false}
         ListFooterComponent={<Footer1 handleNumber={handleNumber} />}
       />
     </View>

@@ -1,10 +1,10 @@
 import React from 'react';
 import {View, Pressable, Text, StyleSheet } from 'react-native';
 
-export const Btn = ({type,name,onPress}) => {
+export const Btn = ({type,name,onPress,disabled}) => {
   return (
     <View> 
-      <Pressable 
+      <Pressable disabled={disabled}
         style={type==="btnSecondary"? styles.btnSecondary: styles.button}
         onPress={onPress}
         >
