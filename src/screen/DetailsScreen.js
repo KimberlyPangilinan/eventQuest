@@ -49,18 +49,27 @@ export default function DetailsScreen({ route, navigation }) {
   }, [auth.currentUser?.email]);
 
   const registerEvent = async () => {
-    const docRef = await addDoc(collection(db, "registration"), {
-      eventID: itemId,
-      eventTitle: title,
-      name: name,
-      email: auth.currentUser?.email,
-      dateRegistered: new Date(),
-    });
-
-    console.log("Document written with ID: ", docRef.id);
-    setIsRegistered("Registered");
-    setIsDisabled(true);
-    alert("You are now registered");
+    try {
+      if (!auth.currentUser) {
+        throw new Error("Registration failed, you need to login first");
+      }
+      
+      const docRef = await addDoc(collection(db, "registration"), {
+        eventID: itemId,
+        eventTitle: title,
+        name: name,
+        email: auth.currentUser?.email,
+        dateRegistered: new Date(),
+      });
+  
+      console.log("Document written with ID: ", docRef.id);
+      setIsRegistered("Registered");
+      setIsDisabled(true);
+      alert("You are now registered");
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
   };
 
   return (

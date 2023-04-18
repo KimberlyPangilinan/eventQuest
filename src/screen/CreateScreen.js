@@ -16,7 +16,8 @@ const CreateScreen = ({ navigation }) => {
   
 
   const addEvent = async () => {
-    const docRef = await addDoc(collection(db, "events"), {
+    try{
+       const docRef = await addDoc(collection(db, "events"), {
       title: title,
       description: description,
       type:type,
@@ -27,9 +28,12 @@ const CreateScreen = ({ navigation }) => {
       status:'pending'
 
     });
-    console.log("Document written with ID: ", docRef.id);
     alert("Event submission successful! Pending admin approval for posting.")
-  };
+    
+    }
+    catch (error) {
+      alert("Registration failed, you need to login first");}}
+   
 
   return (
     <View style={styles.container}>
