@@ -90,7 +90,9 @@ function App() {
             <Stack.Screen name="MyApp" component={MyApp} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Details" component={DetailsScreen} />
-            <Stack.Screen name="Lists" component={ListScreen} initialParams={{ title: "Hosted Events" }} />
+            <Stack.Screen name="Upcoming Events" component={ListScreen} initialParams={{ title: "Upcoming Events" }} />
+            <Stack.Screen name="Events Registered" component={ListScreen} initialParams={{ title: "Events Registered" }} />
+            <Stack.Screen name="Events Created" component={ListScreen} initialParams={{ title: "Events Created" }} />
             <Stack.Screen name="Personal Information" component={EditScreen} />
             <Stack.Screen name="Search Screen " component={SearchScreen} />
             <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }} />

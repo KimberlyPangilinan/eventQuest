@@ -25,7 +25,7 @@ const DATA = [
 
 const Item = ({item, onPress, backgroundColor, textColor}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-    <Text style={[styles.number, {color: textColor}]}>80</Text>
+    <Text style={[styles.number, {color: textColor}]}>0</Text>
     <Text style={[styles.title, {color: textColor}]}>{item.title}</Text>
   </TouchableOpacity>
 );
@@ -41,7 +41,7 @@ const CardList = ({ navigation }) => {
       <Item
         item={item}
         onPress={() => {setSelectedId(item.id)
-            navigation.navigate('Lists', {
+            navigation.navigate(item.title, {
             itemId: item.id,
             otherParam: 'anything you want here',
           });

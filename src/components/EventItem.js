@@ -8,7 +8,7 @@ import { Btn } from './Btn';
 
 
   
-const Item = ({title,id,description, onPress, backgroundColor, textColor}) => (
+const Item = ({title,id,description,organization,email, onPress, backgroundColor, textColor}) => (
     <TouchableOpacity onPress={onPress} style={[styles.innerContainer, {backgroundColor}]}>
      <Image source={{uri: 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg'}}
        style={styles.itemImage} />
@@ -17,7 +17,7 @@ const Item = ({title,id,description, onPress, backgroundColor, textColor}) => (
           <Text style={styles.itemTitle}>{title}</Text>
         </View>
         <View>
-          <Text  style={styles.itemText}>{description}</Text>
+          <Text  style={styles.itemText}>{organization} | {email}</Text>
         </View>
        
        </View>
@@ -41,7 +41,15 @@ const EventItem = ({title,navigation}) => {
     const [events, setevents] = useState([]);
     const [selectedId, setSelectedId] = useState();
     const [limitValue, setLimitValue] = useState(3);
+    const today = new Date();
+    const startOfToday = new Date();
+startOfToday.setHours(0, 0, 0, 0);
+
+const endOfToday = new Date();
+endOfToday.setHours(23, 59, 59, 999);
     useEffect(() => {
+
+     
       const unsubscribe = auth.onAuthStateChanged(user => {
         if (user) {
           setIsLoggedIn(false);
@@ -49,7 +57,20 @@ const EventItem = ({title,navigation}) => {
           setIsLoggedIn(true);
         }
       });
-      const q = query(collection(db, "events"), limit(limitValue), orderBy("datePosted", "asc"));
+      const q = title==="Upcoming Events"
+      
+      ? query(
+        collection(db, "registration"),
+        where("email", "==",auth.currentUser ? auth.currentUser.email : null),
+        where("dateRegistered", ">=", startOfToday),
+       )
+      :  title=="Events Registered"
+        ?  query(
+          collection(db, "registration"),
+          where("email", "==",auth.currentUser ? auth.currentUser.email : null))
+         
+      : query(collection(db, "events"), limit(limitValue),
+        where("when", ">=", startOfToday));
       const unsubscribeevents = onSnapshot(q, (querySnapshot) => {
         const events = [];
         querySnapshot.forEach((doc) => {
@@ -58,8 +79,9 @@ const EventItem = ({title,navigation}) => {
       setevents(events);
     });
     return () => {
-      unsubscribeevents();
       unsubscribe();
+      unsubscribeevents();
+
     };
     }, [limitValue]);
     
@@ -70,16 +92,43 @@ const EventItem = ({title,navigation}) => {
     const renderItem = ({item}) => {
 
       return(
-          <Item title = {item.title} id={item.id} description={item.description} email={item.email}
+
+      title == "Upcoming Events"
+          ? <Item title = {item.eventTitle} id={item.id} organization={item.organization} description={item.description} email={item.email}
+                onPress={() => {setSelectedId(item.id)
+                navigation.navigate('Details', {
+                itemId: item.id,
+                title:item.eventTitle,
+                email:item.email,
+                organization:item.organization
+                });}}
+               
+          />:
+      title=="Events Registered"
+      ? <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
                 description:item.description,
                 title:item.title,
-                email:item.email
+                email:item.email,
+                organization:item.organization
                 });}}
                
-          />)
+          />
+          : <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email}
+          onPress={() => {setSelectedId(item.id)
+          navigation.navigate('Details', {
+          itemId: item.id,
+          description:item.description,
+          title:item.title,
+          email:item.email,
+          organization:item.organization
+          });}}
+         
+    />
+
+          )
       }
 return (
     <View style={styles.container}>
