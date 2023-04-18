@@ -16,6 +16,7 @@ import CreateScreen from './src/screen/CreateScreen';
 import EventItem from './src/components/EventItem';
 import ListScreen from './src/screen/ListScreen';
 import SearchScreen from './src/screen/SearchScreen';
+import Picker from './src/screen/Picker';
 
 
 const Tab = createBottomTabNavigator();
@@ -64,6 +65,14 @@ function MyApp() {
       <Tab.Screen
         name="Account" 
         component={ProfileScreen}
+        options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person" color={color} size={16} />
+            ),
+          }} />
+           <Tab.Screen
+        name="Picker" 
+        component={Picker}
         options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person" color={color} size={16} />

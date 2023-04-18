@@ -5,6 +5,7 @@ import { db,auth } from '../config/firebase';
 import EventItem from '../components/EventItem';
 import { Header } from '../components/Header';
 import { Btn } from '../components/Btn';
+import Picker from './Picker';
 
 
 const CreateScreen = ({ navigation }) => {
@@ -62,11 +63,17 @@ const CreateScreen = ({ navigation }) => {
             onChangeText={setWhen} placeholder='' />
         </View>
         <View>
+        <Text>When</Text>
+         <Picker/>
+        </View>
+       
+        <View>
         <Text>Where</Text>
         <TextInput style={styles.input}  value={where}
             onChangeText={setWhere} placeholder='' />
+            
         </View>
-        
+       
         <Btn  name="Post" onPress={addEvent} />
         
     </ScrollView>
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical:40,
-    height:'60%'
+ 
   },
   input: {
     height: 40,
