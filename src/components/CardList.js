@@ -41,11 +41,11 @@ const CardList = ({ navigation }) => {
       <Item
         item={item}
         onPress={() => {setSelectedId(item.id)
-            navigation.navigate('Details', {
+            navigation.navigate('Lists', {
             itemId: item.id,
             otherParam: 'anything you want here',
           });
-        
+        console.log("dfdf")
         }}
         backgroundColor={backgroundColor}
         textColor={color}

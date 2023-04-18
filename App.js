@@ -13,6 +13,9 @@ import EventScreen from './src/screen/EventScreen';
 import DetailsScreen from './src/screen/DetailsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import CreateScreen from './src/screen/CreateScreen';
+import EventItem from './src/components/EventItem';
+import ListScreen from './src/screen/ListScreen';
+import SearchScreen from './src/screen/SearchScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -32,14 +35,15 @@ function MyApp() {
             ),
           }}
         />
-      <Tab.Screen 
-        name="Create" 
-        component={CreateScreen}
+      
+      <Tab.Screen
+        name="Search" 
+        component={SearchScreen}
         options={{
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="create" color={color} size={16} />
+              <Ionicons name="search" color={color} size={16} />
             ),
-          }} />
+      }} />
       <Tab.Screen 
         name="Events" 
         component={EventScreen} 
@@ -49,6 +53,14 @@ function MyApp() {
             ),
           }}
         />
+      <Tab.Screen 
+        name="Create" 
+        component={CreateScreen}
+        options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="create" color={color} size={16} />
+            ),
+          }} />
       <Tab.Screen
         name="Account" 
         component={ProfileScreen}
@@ -57,6 +69,7 @@ function MyApp() {
               <Ionicons name="person" color={color} size={16} />
             ),
           }} />
+
     </Tab.Navigator>
   );
 }
@@ -73,19 +86,15 @@ function App() {
 
   return (
     <NavigationContainer>
-   
-     
          <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }}>
             <Stack.Screen name="MyApp" component={MyApp} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Details" component={DetailsScreen} />
+            <Stack.Screen name="Lists" component={ListScreen} initialParams={{ title: "Hosted Events" }} />
             <Stack.Screen name="Personal Information" component={EditScreen} />
+            <Stack.Screen name="Search Screen " component={SearchScreen} />
             <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }} />
           </Stack.Navigator>
-    
-      
-
-
     </NavigationContainer>
   );
 }

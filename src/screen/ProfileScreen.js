@@ -124,7 +124,7 @@ export default function ProfileScreen({ navigation }) {
   }, [])
   return (
     <ScrollView contentContainerStyle={styles.container}>
-          <Header title="Home Screen" subtitle="More" message="You are stilld not logged in"/>
+          <Header title="Home Screen" subtitle="More" message="You are still not logged in"/>
          
           {isLoggedIn? 
             <View style={styles.content1}>

@@ -75,7 +75,8 @@ const EventItem = ({title,navigation}) => {
                 navigation.navigate('Details', {
                 itemId: item.id,
                 description:item.description,
-                title:item.title
+                title:item.title,
+                email:item.email
                 });}}
                
           />)

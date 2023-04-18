@@ -11,7 +11,6 @@ const SignUpScreen = ({navigation}) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-   
   }, [])
 
   const handleSignUp =()=>{
