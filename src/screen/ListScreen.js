@@ -15,6 +15,7 @@ export default function ListScreen({ route, navigation }) {
   const { description } = route.params;
   const { title } = route.params;
   const { email } = route.params;
+  const { when } = route.params;
 
   React.useEffect(() => {
     const fetchProfile = async () => {

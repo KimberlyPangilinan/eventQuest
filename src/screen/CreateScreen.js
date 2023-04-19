@@ -23,7 +23,7 @@ const CreateScreen = ({ navigation }) => {
     );
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [startedDate, setStartedDate] = useState("12/12/2023");
-  const dateString = "2023/04/25 00:00";
+  const dateString = selectedStartDate;
   const dateParts = dateString.split("/");
   const year = parseInt(dateParts[0], 10);
   const month = parseInt(dateParts[1], 10) - 1;

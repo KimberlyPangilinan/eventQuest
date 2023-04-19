@@ -14,6 +14,7 @@ export default function DetailsScreen({ route, navigation }) {
   const { description } = route.params;
   const { title } = route.params;
   const { email } = route.params;
+  const { when } = route.params;
 
   React.useEffect(() => {
     const fetchProfile = async () => {
@@ -60,6 +61,7 @@ export default function DetailsScreen({ route, navigation }) {
         name: name,
         email: auth.currentUser?.email,
         dateRegistered: new Date(),
+        when:when
       });
   
       console.log("Document written with ID: ", docRef.id);

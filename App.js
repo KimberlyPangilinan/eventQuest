@@ -70,14 +70,7 @@ function MyApp() {
               <Ionicons name="person" color={color} size={16} />
             ),
           }} />
-           <Tab.Screen
-        name="Picker" 
-        component={Picker}
-        options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person" color={color} size={16} />
-            ),
-          }} />
+       
 
     </Tab.Navigator>
   );

@@ -62,7 +62,7 @@ const endOfToday = new Date();
       ? query(
         collection(db, "registration"),
         where("email", "==",auth.currentUser ? auth.currentUser.email : null),
-        where("dateRegistered", ">=", startOfToday),
+                where("when", ">=", startOfToday),
        )
       :  title=="Events Registered"
         ?  query(
@@ -94,13 +94,14 @@ const endOfToday = new Date();
       return(
 
       title == "Upcoming Events"
-          ? <Item title = {item.eventTitle} id={item.id} organization={item.organization} description={item.description} email={item.email}
+          ? <Item title = {item.eventTitle} id={item.id} when={when} organization={item.organization} description={item.description} email={item.email}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
                 title:item.eventTitle,
                 email:item.email,
-                organization:item.organization
+                organization:item.organization,
+                when:when
                 });}}
                
           />:
