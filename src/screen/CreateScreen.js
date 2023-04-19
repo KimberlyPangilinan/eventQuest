@@ -7,22 +7,44 @@ import { Header } from '../components/Header';
 import { Btn } from '../components/Btn';
 import Picker from './Picker';
 
+  import { getFormatedDate } from "react-native-modern-datepicker";
 
 const CreateScreen = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [type, setType] = useState('');
+  const [category, setCategory] = useState('');
+  const [organization, setOrganization] = useState('');
   const [when, setWhen] = useState('');
   const [where, setWhere] = useState('');
+      const today = new Date();
+    const startDate = getFormatedDate(
+      today.setDate(today.getDate() + 1),
+      "YYYY/MM/DD"
+    );
+  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const [startedDate, setStartedDate] = useState("12/12/2023");
+  const dateString = "2023/04/25 00:00";
+  const dateParts = dateString.split("/");
+  const year = parseInt(dateParts[0], 10);
+  const month = parseInt(dateParts[1], 10) - 1;
+  const day = parseInt(dateParts[2].substr(0, 2), 10);
+  const hour = parseInt(dateParts[2].substr(3, 2), 10);
+  const minute = parseInt(dateParts[2].substr(6, 2), 10);
+  const dateObj = new Date(year, month, day, hour, minute);
+  const timestamp = dateObj.getTime();
   
-
+  console.log(dateObj);
+  function handleChangeStartDate(propDate) {
+    setStartedDate(propDate);
+  }
   const addEvent = async () => {
     try{
        const docRef = await addDoc(collection(db, "events"), {
       title: title,
       description: description,
-      type:type,
-      when: when,
+      organization:organization,
+      category:category,
+      when: dateObj,
       where: where,
       datePosted: new Date(),
       email:auth.currentUser?.email,
@@ -30,10 +52,13 @@ const CreateScreen = ({ navigation }) => {
 
     });
     alert("Event submission successful! Pending admin approval for posting.")
-    
+
     }
     catch (error) {
-      alert("Registration failed, you need to login first");}}
+      alert("Registration failed, you need to login first");
+    
+     
+    }}
    
 
   return (
@@ -53,18 +78,24 @@ const CreateScreen = ({ navigation }) => {
             onChangeText={setDescription} placeholder='' />
         </View>
         <View>
-        <Text>Type</Text>
-        <TextInput style={styles.input}  value={type}
-            onChangeText={setType} placeholder='' />
+        <Text>Category</Text>
+        <TextInput style={styles.input}  value={category}
+            onChangeText={setCategory} placeholder='' />
         </View>
         <View>
-        <Text>When</Text>
-        <TextInput style={styles.input}  value={when}
-            onChangeText={setWhen} placeholder='' />
+        <Text>Organization</Text>
+        <TextInput style={styles.input}  value={organization}
+            onChangeText={setOrganization} placeholder='' />
         </View>
+
+  
         <View>
         <Text>When</Text>
-         <Picker/>
+         <Picker mimimumDate={startDate} selected={startedDate} 
+         onSelectedChange={(date) => setSelectedStartDate(date)}
+         onDateChanged={handleChangeStartDate}
+          selectedStartDate={selectedStartDate}
+         />
         </View>
        
         <View>
@@ -87,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   content: {
-    flex: 1,
+  
     gap:8,
     justifyContent: 'center',
     alignItems: 'center',

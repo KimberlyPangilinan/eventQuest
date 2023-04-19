@@ -43,10 +43,10 @@ const EventItem = ({title,navigation}) => {
     const [limitValue, setLimitValue] = useState(3);
     const today = new Date();
     const startOfToday = new Date();
-startOfToday.setHours(0, 0, 0, 0);
+
 
 const endOfToday = new Date();
-endOfToday.setHours(23, 59, 59, 999);
+
     useEffect(() => {
 
      
@@ -105,25 +105,32 @@ endOfToday.setHours(23, 59, 59, 999);
                
           />:
       title=="Events Registered"
-      ? <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email}
+      ? <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
                 description:item.description,
                 title:item.title,
                 email:item.email,
-                organization:item.organization
+                organization:item.organization,
+                when:item.when,
+                where:item.where,
+                category:item.category
+
                 });}}
                
           />
-          : <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email}
+          : <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
           onPress={() => {setSelectedId(item.id)
           navigation.navigate('Details', {
           itemId: item.id,
           description:item.description,
           title:item.title,
           email:item.email,
-          organization:item.organization
+          organization:item.organization,
+          when:item.when,
+          where:item.where,
+          category:item.category
           });}}
          
     />

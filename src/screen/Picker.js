@@ -12,20 +12,15 @@ import {
   import DatePicker from "react-native-modern-datepicker";
   import { getFormatedDate } from "react-native-modern-datepicker";
   
-  export default function Picker() {
+  export default function Picker({selectedStartDate,minimumDate,selected,onSelectedChange,onDateChanged}) {
     const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
     const today = new Date();
     const startDate = getFormatedDate(
       today.setDate(today.getDate() + 1),
       "YYYY/MM/DD"
     );
-    const [selectedStartDate, setSelectedStartDate] = useState("");
-    const [startedDate, setStartedDate] = useState("12/12/2023");
   
-    function handleChangeStartDate(propDate) {
-      setStartedDate(propDate);
-    }
-  
+    
     const handleOnPressStartDate = () => {
       setOpenStartDatePicker(!openStartDatePicker);
     };
@@ -33,9 +28,6 @@ import {
       <>
        
           <View>
-        
-          
-                <Text style={{ fontSize: 18 }}>Select Date</Text>
                 <TouchableOpacity
                   style={styles.inputBtn}
                   onPress={handleOnPressStartDate}
@@ -43,7 +35,6 @@ import {
                   <Text>{selectedStartDate}</Text>
                 </TouchableOpacity>
            
-       
   
             {/* Create modal for date picker */}
             <Modal
@@ -54,11 +45,11 @@ import {
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                   <DatePicker
-                
+                    minuteInterval={15}
                     minimumDate={startDate}
-                    selected={startedDate}
-                    onDateChanged={handleChangeStartDate}
-                    onSelectedChange={(date) => setSelectedStartDate(date)}
+                    selected={selected}
+                    onDateChanged={onDateChanged}
+                    onSelectedChange={onSelectedChange}
                     options={{
                       backgroundColor: "#080516",
                       textHeaderColor: "#469ab6",
@@ -69,6 +60,7 @@ import {
                       borderColor: "rgba(122, 146, 165, 0.1)",
                     }}
                   />
+              
                   
                   <TouchableOpacity onPress={handleOnPressStartDate}>
                     <Text style={{ color: "white" }}>Close</Text>
@@ -84,7 +76,27 @@ import {
   
   const styles = StyleSheet.create({
 
-  
+    inputBtn: {width:'100%',
+        height: 40,
+        minWidth:100,
+        width: 321,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#a0a0a0',
+        padding: 8,
+        marginBottom: 10,
+        backgroundColor:'#fff9',
+        borderRadius:8
+      },
+      submitBtn: {
+        backgroundColor: "#342342",
+        paddingVertical: 22,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 8,
+        paddingVertical: 12,
+        marginVertical: 16,
+      },
    
     modalView: {
       margin: 20,
