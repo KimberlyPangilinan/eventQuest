@@ -62,13 +62,17 @@ const endOfToday = new Date();
       ? query(
         collection(db, "registration"),
         where("email", "==",auth.currentUser ? auth.currentUser.email : null),
-                where("when", ">=", startOfToday),
+        where("when", ">=", startOfToday),
        )
       :  title=="Events Registered"
         ?  query(
           collection(db, "registration"),
           where("email", "==",auth.currentUser ? auth.currentUser.email : null))
-         
+      :  title=="Events Created"
+          ?  query(
+            collection(db, "events"),
+            where("email", "==",auth.currentUser ? auth.currentUser.email : null))
+             
       : query(collection(db, "events"), limit(limitValue),
         where("when", ">=", startOfToday));
       const unsubscribeevents = onSnapshot(q, (querySnapshot) => {
@@ -94,7 +98,7 @@ const endOfToday = new Date();
       return(
 
       title == "Upcoming Events"
-          ? <Item title = {item.eventTitle} id={item.id} when={when} organization={item.organization} description={item.description} email={item.email}
+          ? <Item title = {item.eventTitle} id={item.id} when={item.when} organization={item.organization} description={item.description} email={item.email}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
@@ -106,6 +110,22 @@ const endOfToday = new Date();
                
           />:
       title=="Events Registered"
+      ? <Item title = {item.eventTitle} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
+                onPress={() => {setSelectedId(item.id)
+                navigation.navigate('Details', {
+                itemId: item.id,
+                description:item.description,
+                title:item.eventTitle,
+                email:item.email,
+                organization:item.organization,
+                when:item.when,
+                where:item.where,
+                category:item.category
+
+                });}}
+               
+          />:
+      title=="Events Created"
       ? <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
@@ -121,6 +141,7 @@ const endOfToday = new Date();
                 });}}
                
           />
+
           : <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
           onPress={() => {setSelectedId(item.id)
           navigation.navigate('Details', {

@@ -21,7 +21,7 @@ const CreateScreen = ({ navigation }) => {
       today.setDate(today.getDate() + 1),
       "YYYY/MM/DD"
     );
-  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const [selectedStartDate, setSelectedStartDate] = useState("2023/04/25 00:00");
   const [startedDate, setStartedDate] = useState("12/12/2023");
   const dateString = selectedStartDate;
   const dateParts = dateString.split("/");
@@ -31,9 +31,7 @@ const CreateScreen = ({ navigation }) => {
   const hour = parseInt(dateParts[2].substr(3, 2), 10);
   const minute = parseInt(dateParts[2].substr(6, 2), 10);
   const dateObj = new Date(year, month, day, hour, minute);
-  const timestamp = dateObj.getTime();
-  
-  console.log(dateObj);
+
   function handleChangeStartDate(propDate) {
     setStartedDate(propDate);
   }
@@ -50,13 +48,23 @@ const CreateScreen = ({ navigation }) => {
       email:auth.currentUser?.email,
       status:'pending'
 
-    });
+    }
+   
+    );
+
     alert("Event submission successful! Pending admin approval for posting.")
+    setTitle("");
+    setCategory("")
+    setDescription("")
+    setOrganization("")
 
     }
     catch (error) {
       alert("Registration failed, you need to login first");
-    
+      setTitle("");
+      setCategory("")
+      setDescription("")
+      setOrganization("")
      
     }}
    
@@ -70,22 +78,22 @@ const CreateScreen = ({ navigation }) => {
         <View>
         <Text>Event/Webinar Title</Text>
         <TextInput style={styles.input}  value={title}
-            onChangeText={setTitle} placeholder='' />
+            onChangeText={setTitle} placeholder='Event Title' />
         </View>
         <View>
         <Text>Description</Text>
         <TextInput style={styles.input}  value={description}
-            onChangeText={setDescription} placeholder='' />
+            onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} />
         </View>
         <View>
         <Text>Category</Text>
         <TextInput style={styles.input}  value={category}
-            onChangeText={setCategory} placeholder='' />
+            onChangeText={setCategory} placeholder='Ex: Cybersecurity' />
         </View>
         <View>
         <Text>Organization</Text>
         <TextInput style={styles.input}  value={organization}
-            onChangeText={setOrganization} placeholder='' />
+            onChangeText={setOrganization} placeholder='Organization hosting the event' />
         </View>
 
   
@@ -99,9 +107,9 @@ const CreateScreen = ({ navigation }) => {
         </View>
        
         <View>
-        <Text>Where</Text>
+        <Text>Link/Address/Platform</Text>
         <TextInput style={styles.input}  value={where}
-            onChangeText={setWhere} placeholder='' />
+            onChangeText={setWhere} placeholder='Add the platform or the Address' />
             
         </View>
        

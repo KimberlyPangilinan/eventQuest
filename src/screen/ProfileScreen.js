@@ -63,19 +63,19 @@ export const EditScreen = ({navigation}) => {
     <Image source={{uri: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
        style={{width: 100, height: 100,borderRadius:100}} />
     <View>
-      <Text>First Name</Text>
+      <Text>Full Name</Text>
       <TextInput style={styles.input}  value={name}
-          onChangeText={setName} placeholder='Name' readonly/>
+          onChangeText={setName} placeholder='Full name' readonly/>
     </View>
     <View>
-      <Text>Birthdate</Text>
+      <Text>Occupation</Text>
       <TextInput style={styles.input}  value={occupation}
-          onChangeText={setOccupation} placeholder='Name' readonly/>
+          onChangeText={setOccupation} placeholder='Occupation' readonly/>
     </View>
     <View>
       <Text>Address</Text>
       <TextInput style={styles.input}  value={address}
-          onChangeText={setAddress} placeholder='Name' readonly/>
+          onChangeText={setAddress} placeholder='Address' readonly/>
     </View>
     
     <Btn  name="Save"  onPress={saveProfile}/>
@@ -124,7 +124,7 @@ export default function ProfileScreen({ navigation }) {
   }, [])
   return (
     <ScrollView contentContainerStyle={styles.container}>
-          <Header title="Home Screen" subtitle="More" message="You are still not logged in"/>
+          <Header title="Home Screen" subtitle="My Account" message="Join us by creating or signing in an account"/>
          
           {isLoggedIn? 
             <View style={styles.content1}>
