@@ -1,93 +1,136 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, FlatList, TextInput,TouchableOpacity, Text, View, Button,Pressable, StyleSheet,Image } from 'react-native';
-import { collection, addDoc, getDocs } from "firebase/firestore"; 
-import { db } from '../config/firebase';
-import { auth } from "../config/firebase";
-import { limit, onSnapshot, query, orderBy ,where, } from "firebase/firestore";
+import {
+  ScrollView,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  View,
+  Button,
+  Pressable,
+  StyleSheet,
+  Image,
+} from 'react-native';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  limit,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+} from 'firebase/firestore';
+import { db, auth } from '../config/firebase';
 import { Btn } from './Btn';
 
-
-  
-const Item = ({title,id,description,organization,email, onPress, backgroundColor, textColor}) => (
-    <TouchableOpacity onPress={onPress} style={[styles.innerContainer, {backgroundColor}]}>
-     <Image source={{uri: 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg'}}
-       style={styles.itemImage} />
-       <View style={styles.itemInfo}>
-        <View style={styles.itemHeader}>
-          <Text style={styles.itemTitle}>{title}</Text>
-        </View>
-        <View>
-          <Text  style={styles.itemText}>{organization} | {email}</Text>
-        </View>
-       
-       </View>
-       
-    </TouchableOpacity>)
-  
-const Seperator =()=> 
-    <View style={{borderBottomWidth:0.5,borderColor:'#cbcad6'}}/>
-  
-const Header1 =({title})=> 
-    <View  style={styles.MenuContainer}><Text style={styles.itemMenu}>{title}</Text></View>
-  
-const Footer1 =({handleNumber})=> 
-    <View  style={styles.MenuContainer}>
-      <Btn type="btnSecondary" name="View More" onPress={handleNumber}/>
+const Item = ({
+  title,
+  id,
+  description,
+  organization,
+  email,
+  onPress,
+  backgroundColor,
+  textColor,
+}) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={[styles.innerContainer, { backgroundColor }]}
+  >
+    <Image
+      source={{
+        uri:
+          'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg',
+      }}
+      style={styles.itemImage}
+    />
+    <View style={styles.itemInfo}>
+      <View style={styles.itemHeader}>
+        <Text style={styles.itemTitle}>{title}</Text>
+      </View>
+      <View>
+        <Text style={styles.itemText}>
+          {organization} | {email}
+        </Text>
+      </View>
     </View>
+  </TouchableOpacity>
+);
 
-  
-const EventItem = ({title,navigation}) => {
-    const [isLoggedIn, setIsLoggedIn] = useState('');
-    const [events, setevents] = useState([]);
-    const [selectedId, setSelectedId] = useState();
-    const [limitValue, setLimitValue] = useState(3);
-    const today = new Date();
-    const startOfToday = new Date();
+const Seperator = () => (
+  <View style={{ borderBottomWidth: 0.5, borderColor: '#cbcad6' }} />
+);
 
+const Header = ({ title }) => (
+  <View style={styles.menuContainer}>
+    <Text style={styles.itemMenu}>{title}</Text>
+  </View>
+);
 
-const endOfToday = new Date();
+const Footer = ({ handleNumber }) => (
+  <View style={styles.menuContainer}>
+    <Btn type="btnSecondary" name="View More" onPress={handleNumber} />
+  </View>
+);
 
-    useEffect(() => {
+const EventItem = ({ title, navigation }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState('');
+  const [events, setEvents] = useState([]);
+  const [selectedId, setSelectedId] = useState();
+  const [limitValue, setLimitValue] = useState(3);
+  const today = new Date();
+  const startOfToday = new Date();
+  const endOfToday = new Date();
 
-     
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        if (user) {
-          setIsLoggedIn(false);
-        } else {
-          setIsLoggedIn(true);
-        }
-      });
-      const q = title==="Upcoming Events"
-      
-      ? query(
-        collection(db, "registration"),
-        where("email", "==",auth.currentUser ? auth.currentUser.email : null),
-        where("when", ">=", startOfToday),
-       )
-      :  title=="Events Registered"
-        ?  query(
-          collection(db, "registration"),
-          where("email", "==",auth.currentUser ? auth.currentUser.email : null))
-      :  title=="Events Created"
-          ?  query(
-            collection(db, "events"),
-            where("email", "==",auth.currentUser ? auth.currentUser.email : null))
-             
-      : query(collection(db, "events"), limit(limitValue),
-        where("when", ">=", startOfToday));
-      const unsubscribeevents = onSnapshot(q, (querySnapshot) => {
-        const events = [];
-        querySnapshot.forEach((doc) => {
-            events.push({id: doc.id, ...doc.data()});
-        });
-      setevents(events);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setIsLoggedIn(false);
+      } else {
+        setIsLoggedIn(true);
+      }
     });
+
+    let q = null;
+    switch (title) {
+      case 'Upcoming Events':
+        q = query(
+          collection(db, 'registration'),
+          where('email', '==', auth.currentUser ? auth.currentUser.email : null),
+          where('when', '>=', startOfToday)
+        );
+        break;
+      case 'Events Registered':
+        q = query(
+          collection(db, 'registration'),
+          where('email', '==', auth.currentUser ? auth.currentUser.email : null)
+        );
+        break;
+      case 'Events Created':
+        q = query(
+          collection(db, 'events'),
+          where('email', '==', auth.currentUser ? auth.currentUser.email : null)
+        );
+        break;
+      default:
+        q = query(collection(db, 'events'), limit(limitValue), where('when', '>=', startOfToday));
+        break;
+    }
+
+    const unsubscribeevents = onSnapshot(q, querySnapshot => {
+      const events = [];
+      querySnapshot.forEach(doc => {
+        events.push({ id: doc.id, ...doc.data() });
+      });
+      setEvents(events);
+    });
+
     return () => {
       unsubscribe();
       unsubscribeevents();
-
     };
-    }, [limitValue]);
+  }, [limitValue]);
     
     const handleNumber = () => {
       setLimitValue(prevLimitValue => prevLimitValue + 5); // increase limitValue by 10 on button press
@@ -161,14 +204,14 @@ const endOfToday = new Date();
       }
 return (
     <View style={styles.container}>
-    <Header1 title={title}/>
+    <Header title={title}/>
     <FlatList 
         data={events} 
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Seperator}
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={<Footer1 handleNumber={handleNumber} />}
+        ListFooterComponent={<Footer handleNumber={handleNumber} />}
       />
     </View>
   )
@@ -213,7 +256,7 @@ const styles = StyleSheet.create({
     textAlign:'center',
     fontWeight:'bold'
   },
-  MenuContainer: {
+  menuContainer: {
     
     paddingVertical: 20,
     justifyContent: 'center',

@@ -4,6 +4,7 @@ import { Btn } from '../components/Btn';
 import { collection, addDoc, getDocs, where, query, doc, updateDoc } from 'firebase/firestore';
 import { db,auth } from '../config/firebase';
 import EventItem from '../components/EventItem';
+import RegList from '../components/RegList';
 
 
 export default function DetailsScreen({ route, navigation }) {
@@ -84,7 +85,7 @@ export default function DetailsScreen({ route, navigation }) {
       <Text>Event ID: {itemId}</Text>
       <Text>Description: {JSON.stringify(description)}</Text>
       <Btn name={isRegistered} disabled={isDisabled} onPress={registerEvent} />
-      <EventItem/>
+      <RegList itemId={itemId}/>
     </View>
   );
 }
