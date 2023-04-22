@@ -59,6 +59,7 @@ const SearchScreen = ({ navigation }) => {
           description: item.description,
           title: item.title,
           email: item.email,
+          when:item.when
         });
       }}
     />

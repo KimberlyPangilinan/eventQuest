@@ -2,13 +2,13 @@
 import LoginScreen from './src/screen/LoginScreen';
 import HomeScreen from './src/screen/HomeScreen';
 import ProfileScreen, { EditScreen } from './src/screen/ProfileScreen';
-import * as React from 'react';
+import React,{useState,useEffect} from 'react';
 import {  ScrollView,SafeAreaView,RefreshControl,Button, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SignUpScreen from './src/screen/SignUpScreen';
-import { auth  } from "./src/config/firebase";
+
 import EventScreen from './src/screen/EventScreen';
 import DetailsScreen from './src/screen/DetailsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -17,8 +17,9 @@ import EventItem from './src/components/EventItem';
 import ListScreen from './src/screen/ListScreen';
 import SearchScreen from './src/screen/SearchScreen';
 import Picker from './src/screen/Picker';
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth,  } from "./src/config/firebase";
+import { signInWithCustomToken,signInWithEmailAndPassword } from 'firebase/auth';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -86,6 +87,46 @@ function App() {
     }, 2000);
   }, []);
 
+  const [userEmail, setUserEmail] = useState('');
+ 
+  useEffect(() => {
+    const checkUserAuth = async () => {
+      const userToken = await AsyncStorage.getItem('userToken');
+      const userEmail = await AsyncStorage.getItem('userEmail');
+      const userPassword = await AsyncStorage.getItem('userPassword');
+      if (userToken && userEmail) {
+        console.log(userToken);
+        console.log(userEmail);
+        console.log(userPassword);
+        signInWithToken(userToken,userEmail,userPassword);
+      } else {
+        console.log(auth + 'dauthhh');
+      }
+    };
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace('MyApp');
+        console.log('signed in');
+      } else {
+        console.log('not signed in');
+      }
+    });
+  
+    checkUserAuth();
+     unsubscribe();
+  }, []);
+  
+  const signInWithToken = async (userToken,userEmail,userPassword) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, userEmail , userPassword);
+      const user = userCredential.user;
+      console.log(user);
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    }
+  };
   return (
     <NavigationContainer>
          <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }}>

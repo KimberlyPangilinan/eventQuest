@@ -1,11 +1,12 @@
 import React, { useState,useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { auth,  } from "../config/firebase";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Header = ({subtitle,message,type}) => {
 
   const [isLoggedIn,setIsLoggedIn] = useState('');
+ 
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {

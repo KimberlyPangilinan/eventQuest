@@ -1,7 +1,9 @@
 import React, { useState,useEffect } from 'react';
 import { View, ScrollView, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-import {signInWithEmailAndPassword } from "firebase/auth";
+import {signInWithEmailAndPassword,signInWithCustomToken  } from "firebase/auth";
 import { auth,  } from "../config/firebase";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -11,19 +13,27 @@ const LoginScreen = ({ navigation }) => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         navigation.replace("MyApp")
+        console.log("signed in")
       }
     })
     return unsubscribe
   }, [])
 
-  const handleSignIn =()=>{
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
+  const handleSignIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       console.log('Logged with:', user.email);
-    })
-   .catch(error => alert(error.message))
+      const token = await user.getIdToken();
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('userEmail', user.email);
+      await AsyncStorage.setItem('userPassword', password);
+      
+      console.log(token)
+      console.log(user.email)
+    } catch (error) {
+      alert(error.message);
+    }
   }
  
   return (
