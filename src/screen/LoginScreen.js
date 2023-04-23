@@ -1,47 +1,50 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-import {signInWithEmailAndPassword,signInWithCustomToken  } from "firebase/auth";
-import { auth,  } from "../config/firebase";
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLogged,setIsLogged]=useState(false)
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async(user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        navigation.replace("MyApp")
-        console.log("signed in")
-        const uidToken = await user.getIdToken(user);
-        
+        navigation.replace('MyApp');
+        console.log('signed in');
+        await AsyncStorage.setItem('isLogged', 'true');
+      } else {
+        setIsLogged(false);
+        await AsyncStorage.removeItem('isLogged');
+        await AsyncStorage.removeItem('userToken', token);
+        await AsyncStorage.removeItem('userEmail', user.email);
+        await AsyncStorage.removeItem('userPassword', password);
       }
-    })
-    return unsubscribe
-  }, [])
+    });
 
-  const handleSignIn = async () => {
+    return unsubscribe;
+  }, []);
+
+  const handleSignIn = useCallback(async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      const currentUser = auth;
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
       console.log('Logged with:', user.email);
-      const token =await user.getIdToken(currentUser,true);
+
+      const token = await user.getIdToken(auth, true);
+
       await AsyncStorage.setItem('userToken', token);
-    //  await AsyncStorage.setItem('userToken', token);
       await AsyncStorage.setItem('userEmail', user.email);
       await AsyncStorage.setItem('userPassword', password);
-      
-     
-      console.log(user.email)
+      console.log(user.email);
     } catch (error) {
       alert(error.message);
     }
-  }
- 
+  }, [email, password]);
+
   return (
-    <ScrollView keyboardDismissMode='interactive' contentContainerStyle={styles.container}>
+    <ScrollView keyboardDismissMode="interactive" contentContainerStyle={styles.container}>
       <View style={styles.welcome}>
         <Text style={styles.title}>EventQuest</Text>
         <Text style={styles.subtitle}>Please login to continue.</Text>
@@ -63,16 +66,13 @@ const LoginScreen = ({ navigation }) => {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Pressable 
-          style={styles.button}
-          onPress={handleSignIn}
-          >
+        <Pressable style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
-        <Pressable 
-          onPress={() => navigation.navigate('Signup')}
-          >
-          <Text style={styles.link}>Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text></Text>
+        <Pressable onPress={() => navigation.navigate('Signup')}>
+          <Text style={styles.link}>
+            Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text>
+          </Text>
         </Pressable>
       </View>
     </ScrollView>

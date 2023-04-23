@@ -91,14 +91,16 @@ function App() {
  
   useEffect(() => {
     const checkUserAuth = async () => {
-      const userToken = await AsyncStorage.getItem('userToken');
+   
       const userEmail = await AsyncStorage.getItem('userEmail');
       const userPassword = await AsyncStorage.getItem('userPassword');
-      if (userToken && userEmail) {
-        console.log(userToken);
+      const userToken = await AsyncStorage.getItem('userToken');
+      const isLogged = await AsyncStorage.getItem('isLogged');
+      if ( isLogged) {
+        console.log("succcessfuly get")
         console.log(userEmail);
         console.log(userPassword);
-        signInWithToken(userToken,userEmail,userPassword);
+        signInWithEmail(userToken,userEmail,userPassword);
       } else {
         console.log(auth + 'dauthhh');
       }
@@ -116,10 +118,10 @@ function App() {
      unsubscribe();
   }, []);
   
-  const signInWithToken = async (userToken,userEmail,userPassword) => {
+  const signInWithEmail = async (userToken,userEmail,userPassword) => {
     try {
       //const userCredential = await signInWithCustomToken( auth, userToken);
-      const userCredential = await signInWithEmailAndPassword(auth, userEmail , userPassword);
+     const userCredential = await signInWithEmailAndPassword(auth, userEmail , userPassword);
       const user = userCredential.user;
       console.log(user);
     } catch (error) {

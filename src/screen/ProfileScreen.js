@@ -8,6 +8,7 @@ import {Header} from '../components/Header'
 import { Btn } from '../components/Btn';
 import { collection, addDoc, getDocs, where, query, doc, updateDoc } from 'firebase/firestore';
 import { db} from '../config/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export const EditScreen = ({navigation}) => {
 
   const [name, setName] = useState('');
@@ -86,6 +87,16 @@ export const EditScreen = ({navigation}) => {
 };
 
 export default function ProfileScreen({ navigation }) {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        navigation.replace('Login');
+      
+      }
+    });
+
+    return unsubscribe;
+  }, []);
   
   const [name, setName] = useState('');
   useEffect(() => {
@@ -102,12 +113,18 @@ export default function ProfileScreen({ navigation }) {
     };
     fetchProfile();
   }, [name,navigation]);
-  const handleSignOut=()=>{
+  const handleSignOut=async()=>{
     signOut(auth).then(() => {
       console.log('sign out');
+      navigation.replace('MyApp');
+      
     }).catch((error) => {
       // An error happened.
     });
+    await AsyncStorage.removeItem('isLogged');
+    await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('userEmail');
+    await AsyncStorage.removeItem('userPassword');
   }
   const [isLoggedIn,setIsLoggedIn] = useState('');
 
@@ -125,15 +142,7 @@ export default function ProfileScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
           <Header title="Home Screen" subtitle="My Account" message="Join us by creating or signing in an account"/>
-         
-          {isLoggedIn? 
-            <View style={styles.content1}>
-              
-              <Btn type="btnSecondary" name="Sign Up" onPress={() => navigation.navigate('Signup')}/>
-              <Btn name="Log In" onPress={() => navigation.navigate('Login')}/>
-             
-            </View>
-            : 
+        
             <View style={styles.content}>
               
               <Image source={{uri: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
@@ -146,7 +155,7 @@ export default function ProfileScreen({ navigation }) {
           }} />
               <Btn type="btnSecondary" name="Logout" onPress={handleSignOut}/>
             </View>
-        }
+        
     </ScrollView>
   );
 }

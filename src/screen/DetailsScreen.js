@@ -73,6 +73,7 @@ export default function DetailsScreen({ route, navigation }) {
     } catch (error) {
       console.error(error.message);
       alert(error.message);
+      navigation.replace('Login');
     }
   };
 
