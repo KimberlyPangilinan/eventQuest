@@ -118,6 +118,7 @@ function App() {
   
   const signInWithToken = async (userToken,userEmail,userPassword) => {
     try {
+      //const userCredential = await signInWithCustomToken( auth, userToken);
       const userCredential = await signInWithEmailAndPassword(auth, userEmail , userPassword);
       const user = userCredential.user;
       console.log(user);

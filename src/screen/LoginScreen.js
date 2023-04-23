@@ -10,10 +10,12 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged(async(user) => {
       if (user) {
         navigation.replace("MyApp")
         console.log("signed in")
+        const uidToken = await user.getIdToken(user);
+        
       }
     })
     return unsubscribe
@@ -23,13 +25,15 @@ const LoginScreen = ({ navigation }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      const currentUser = auth;
       console.log('Logged with:', user.email);
-      const token = await user.getIdToken();
+      const token =await user.getIdToken(currentUser,true);
       await AsyncStorage.setItem('userToken', token);
+    //  await AsyncStorage.setItem('userToken', token);
       await AsyncStorage.setItem('userEmail', user.email);
       await AsyncStorage.setItem('userPassword', password);
       
-      console.log(token)
+     
       console.log(user.email)
     } catch (error) {
       alert(error.message);
