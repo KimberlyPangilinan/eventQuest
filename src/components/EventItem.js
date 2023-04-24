@@ -25,7 +25,7 @@ import { db, auth } from '../config/firebase';
 import { Btn } from './Btn';
 
 const Item = ({
-  title,
+  title,image,
   id,
   description,
   organization,
@@ -41,7 +41,7 @@ const Item = ({
     <Image
       source={{
         uri:
-          'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg',
+          image,
       }}
       style={styles.itemImage}
     />
@@ -153,17 +153,13 @@ const EventItem = ({ title, navigation }) => {
                
           />:
       title=="Events Registered"
-      ? <Item title = {item.eventTitle} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
+      ? <Item title = {item.eventTitle} id={item.id} organization={item.organization} when={item.when} 
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
-                description:item.description,
                 title:item.eventTitle,
-                email:item.email,
-                organization:item.organization,
                 when:item.when,
-                where:item.where,
-                category:item.category
+               
 
                 });}}
                
@@ -185,7 +181,7 @@ const EventItem = ({ title, navigation }) => {
                
           />
 
-          : <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
+          : <Item title = {item.title} id={item.id} image={item.image} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
           onPress={() => {setSelectedId(item.id)
           navigation.navigate('Details', {
           itemId: item.id,
@@ -195,7 +191,8 @@ const EventItem = ({ title, navigation }) => {
           organization:item.organization,
           when:item.when,
           where:item.where,
-          category:item.category
+          category:item.category,
+          image:item.image
           });}}
          
     />
