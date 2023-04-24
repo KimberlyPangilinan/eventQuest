@@ -141,14 +141,14 @@ const EventItem = ({ title, navigation }) => {
       return(
 
       title == "Upcoming Events"
-          ? <Item title = {item.eventTitle} id={item.id} when={item.when} organization={item.organization} description={item.description} email={item.email}
+          ? <Item title = {item.eventTitle} id={item.id}  organization={item.organization} description={item.description} email={item.email}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
                 title:item.eventTitle,
                 email:item.email,
                 organization:item.organization,
-                when:when
+                page: "Upcoming Events"
                 });}}
                
           />:
@@ -157,26 +157,16 @@ const EventItem = ({ title, navigation }) => {
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
-                title:item.eventTitle,
-                when:item.when,
-               
-
+                page: "Events Registered"
                 });}}
                
           />:
       title=="Events Created"
-      ? <Item title = {item.title} id={item.id} organization={item.organization} description={item.description} email={item.email} when={item.when} where={item.where} category ={item.category}
+      ? <Item title = {item.title} id={item.id} organization={item.organization}  email={item.email} when={item.when} where={item.where} category ={item.category}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
-                description:item.description,
-                title:item.title,
-                email:item.email,
-                organization:item.organization,
-                when:item.when,
-                where:item.where,
-                category:item.category
-
+                page: "Events Created"
                 });}}
                
           />
