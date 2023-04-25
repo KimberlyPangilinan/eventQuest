@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, ScrollView,Button, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
+import { View, ScrollView,Button, Text, StyleSheet, TextInput, Pressable, Alert,Switch } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth,  } from "../config/firebase";
@@ -9,6 +9,7 @@ const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState("");
+  const [isShown, setIsShown] = useState(false);
 
   useEffect(() => {
   }, [])
@@ -53,15 +54,27 @@ const SignUpScreen = ({navigation}) => {
           placeholderTextColor="#a0a0a0"
           value={password}
           onChangeText={text => setPassword(text)}
-          secureTextEntry
+          secureTextEntry={!isShown? true:false}
+          returnKeyType='go'
+          autoCorrect={false}
         />
+          <View style={{display:"flex",flexDirection:"row",gap:8}}>
+          <Switch
+            trackColor={{false: '#767577', true: '#81b0ff'}}
+            thumbColor={isShown ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#ffff"
+            onValueChange={()=>setIsShown(!isShown)}
+            value={isShown}
+          />
+          <Text style={{color: '#a0a0a0'}}>Show Password</Text>
+        </View>
         <Pressable 
           style={styles.button}
           onPress={handleSignUp}
           >
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
-     
+
         <Pressable 
           onPress={() => navigation.navigate('Login')}
           >
@@ -108,20 +121,21 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     minWidth:100,
-    width: '88%',
+    width: '100%',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#a0a0a0',
     paddingHorizontal: 8,
     marginBottom: 10,
-    backgroundColor:'#fff',
-    borderRadius:100
+    backgroundColor:'#fff9',
+    borderRadius:8
+  
   },
   button: {
     height: 50,
     minWidth:100,
-    width: '88%',
-    borderRadius: 100,
+    width: '100%',
+    borderRadius: 8,
     backgroundColor: '#654dff',
     justifyContent: 'center',
     alignItems: 'center',
