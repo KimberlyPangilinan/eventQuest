@@ -42,10 +42,8 @@ const CardList = ({ navigation }) => {
         item={item}
         onPress={() => {setSelectedId(item.id)
             navigation.navigate(item.title, {
-            itemId: item.id,
-            otherParam: 'anything you want here',
+  
           });
-        console.log("dfdf")
         }}
         backgroundColor={backgroundColor}
         textColor={color}

@@ -50,6 +50,7 @@ const CreateScreen = ({ navigation }) => {
         image:image
       });
       alert("Event submission successful! Pending admin approval for posting.")
+      navigation.replace('MyApp');
       setTitle("");
       setCategory("")
       setDescription("")
@@ -57,6 +58,7 @@ const CreateScreen = ({ navigation }) => {
     }
     catch (error) {
       alert("Registration failed, you need to login first");
+      navigation.replace('Login');
       setTitle("");
       setCategory("")
       setDescription("")
