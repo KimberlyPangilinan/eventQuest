@@ -26,8 +26,10 @@ const Stack = createNativeStackNavigator();
 function MyApp() {
   return (
     <Tab.Navigator 
+     
       screenOptions={{headerStyle: {backgroundColor: '#654dff'},
-      headerTintColor: '#fff',}}>
+      headerTintColor: '#fff'}
+      }>
       <Tab.Screen 
         name="Home" 
         component={HomeScreen} 
@@ -56,9 +58,9 @@ function MyApp() {
           }}
         />
       <Tab.Screen 
-        name="Create" 
+        name="Create an event" 
         component={CreateScreen}
-        options={{
+        options={{tabBarLabel: 'Create',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="create" color={color} size={16} />
             ),
@@ -105,25 +107,18 @@ function App() {
         console.log(auth + 'dauthhh');
       }
     };
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.replace('MyApp');
-        console.log('signed in');
-      } else {
-        console.log('not signed in');
-      }
-    });
-  
+
     checkUserAuth();
-     unsubscribe();
+
   }, []);
   
+
+  //this block of code is used to fetch the log in credentials of the user to stay logged in even when the app is closed
   const signInWithEmail = async (userToken,userEmail,userPassword) => {
     try {
       //const userCredential = await signInWithCustomToken( auth, userToken);
      const userCredential = await signInWithEmailAndPassword(auth, userEmail , userPassword);
       const user = userCredential.user;
-      console.log(user);
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
