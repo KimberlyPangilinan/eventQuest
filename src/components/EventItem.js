@@ -9,7 +9,7 @@ import {
   Button,
   Pressable,
   StyleSheet,
-  Image,
+  Image,ActivityIndicator
 } from 'react-native';
 import {
   collection,
@@ -68,9 +68,14 @@ const Header = ({ title }) => (
   </View>
 );
 
-const Footer = ({ handleNumber }) => (
+const Footer = ({ handleNumber,isLoading }) => (
   <View style={styles.menuContainer}>
-    <Btn type="btnSecondary" name="View More" onPress={handleNumber} />
+    <Btn
+      type="btnSecondary" 
+      name={isLoading?
+            <ActivityIndicator animating size={"small"} color={"gray"} />
+            :"View More"} 
+      onPress={handleNumber} />
   </View>
 );
 
@@ -79,6 +84,7 @@ const EventItem = ({ title, navigation }) => {
   const [events, setEvents] = useState([]);
   const [selectedId, setSelectedId] = useState();
   const [limitValue, setLimitValue] = useState(3);
+  const [isLoading, setIsLoading] = useState(false);
   const today = new Date();
   const startOfToday = new Date();
 
@@ -134,8 +140,14 @@ const EventItem = ({ title, navigation }) => {
     };
   }, [limitValue]);
     
-    const handleNumber = () => {
-      setLimitValue(prevLimitValue => prevLimitValue + 5); // increase limitValue by 10 on button press
+    const handleNumber = async() => {
+      setIsLoading(true)
+      setInterval(() => {
+        setIsLoading(false)
+        setLimitValue(prevLimitValue => prevLimitValue + 5); // increase limitValue by 10 on button press
+       
+      }, 2000);
+     
     }
 
     const renderItem = ({item}) => {
@@ -198,7 +210,7 @@ return (
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Seperator}
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={<Footer handleNumber={handleNumber} />}
+        ListFooterComponent={<Footer handleNumber={handleNumber} isLoading={isLoading} />}
       />
     </View>
   )

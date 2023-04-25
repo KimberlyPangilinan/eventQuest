@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,ScrollView, View, Button,StyleSheet,Image, Pressable } from 'react-native';
+import { Text,ScrollView, View, Button,StyleSheet,Image, Pressable,ActivityIndicator } from 'react-native';
 import { Btn } from '../components/Btn';
 import { collection, addDoc, getDocs,getDoc, where, query, doc, updateDoc } from 'firebase/firestore';
 import { db,auth } from '../config/firebase';
@@ -20,7 +20,7 @@ export default function DetailsScreen({ route, navigation }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const { itemId } = route.params;
   const { page } = route.params;
-
+  const [isLoading, setIsLoading] = React.useState(false);
   React.useEffect(() => {
     const fetchProfile = async () => {
       const q = query(
@@ -35,6 +35,7 @@ export default function DetailsScreen({ route, navigation }) {
     };
 
     const checkRegistration = async () => {
+      setIsLoading(true)
       const q = query(
         collection(db, "registration"),
         where("email", "==", auth.currentUser?.email),
@@ -42,9 +43,16 @@ export default function DetailsScreen({ route, navigation }) {
       );
       const querySnapshot = await getDocs(q);
       if (querySnapshot.size >= 1) {
-        setIsRegistered("Registered");
-        setIsDisabled(true);
+        setInterval(() => {
+          setIsLoading(false)
+          setIsRegistered("Registered");
+          setIsDisabled(true);
+        }, 500);
+        
       } else {
+        setInterval(() => {
+          setIsLoading(false)
+        }, 500);
         setIsRegistered("Register");
         setIsDisabled(false);
       }
@@ -63,9 +71,9 @@ export default function DetailsScreen({ route, navigation }) {
         setOrganization(data.organization)
         const timestamp = data.when;
         setTimestamp(data.when);
-const date = timestamp.toDate();
-const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-setWhen(formattedDate); 
+        const date = timestamp.toDate();
+        const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        setWhen(formattedDate); 
         setImage(data.image);
       } else {
         console.log("No such documentm!");
@@ -118,12 +126,18 @@ setWhen(formattedDate);
       <Text>Event ID: {itemId}</Text>
       <Text> {when}</Text>
       <Text>Description: {JSON.stringify(description)}</Text>
-      <Text>{ auth.currentUser?.email}</Text>
       {page==="Events Created"?<>
       <Pressable onPress={registerEvent}><Btn name="Edit event" disabled={isDisabled}  /></Pressable> 
       <Pressable onPress={handlePress}><Btn name="View participants" type="btnSecondary" disabled={isDisabled} /></Pressable> 
-      </>:page==="Events Registered"? null : <Btn name={isRegistered} disabled={isDisabled} onPress={registerEvent} />
-      
+      </>
+      :page==="Events Registered"? null : 
+      <Btn name={isLoading?             
+          <ActivityIndicator
+                animating
+                size={"small"}
+                color={"white"}
+              />
+          : isRegistered} disabled={isDisabled} onPress={registerEvent} />
       }
      {isOpen?
       <RegList itemId={itemId}/>
