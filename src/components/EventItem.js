@@ -146,7 +146,7 @@ const EventItem = ({ title, navigation }) => {
         setIsLoading(false)
         setLimitValue(prevLimitValue => prevLimitValue + 5); // increase limitValue by 10 on button press
        
-      }, 2000);
+      }, 1000);
      
     }
 

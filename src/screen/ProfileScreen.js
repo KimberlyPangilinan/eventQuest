@@ -9,9 +9,13 @@ import { Btn } from '../components/Btn';
 import { collection, addDoc, getDocs, where, query, doc, updateDoc } from 'firebase/firestore';
 import { db} from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth, updateProfile } from "firebase/auth";
+
 export const EditScreen = ({navigation}) => {
 
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [image, setImage] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [occupation, setOccupation] = useState('');
   const [address, setAddress] = useState('');
@@ -19,19 +23,30 @@ export const EditScreen = ({navigation}) => {
   useEffect(() => {
     // Fetch the user's profile data from Firestore and update the state
     const fetchProfile = async () => {
-      const q = query(collection(db, "userProfile"), where("email", "==", auth.currentUser?.email));
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.size > 0) {
-        const doc = querySnapshot.docs[0];
-        setName(doc.data().name);
-        setAddress(doc.data().address);
-        setOccupation(doc.data().occupation);
+      const user = auth.currentUser;
+
+     
+      if (user !== null) {
+        setName(user.displayName);
+        setPhone(user.phoneNumber);
+        setImage(user.photoURL)
       }
     };
     fetchProfile();
   }, []);
-
-  const saveProfile = async () => {
+  const saveProfile =async()=>{
+    await updateProfile(auth.currentUser, {
+    displayName: name, photoURL: image, phoneNumber:phone
+  }).then(() => {
+    const user = auth.currentUser;
+    console.log(user)
+   console.log(user.displayName)
+    // ...
+  }).catch((error) => {
+    // An error occurred
+    // ...
+  });}
+  const saveProfile1 = async () => {
     const q = query(collection(db, "userProfile"), where("email", "==", auth.currentUser?.email));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.size > 0) {
@@ -61,7 +76,7 @@ export const EditScreen = ({navigation}) => {
   return (
     <View style={styles.content}>
     <Text style={styles.heading}>{name?name: "Hello User"}</Text>
-    <Image source={{uri: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
+    <Image source={{uri: image? image: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
        style={{width: 100, height: 100,borderRadius:100}} />
     <View>
       <Text>Full Name</Text>
@@ -70,13 +85,13 @@ export const EditScreen = ({navigation}) => {
     </View>
     <View>
       <Text>Occupation</Text>
-      <TextInput style={styles.input}  value={occupation}
-          onChangeText={setOccupation} placeholder='Occupation' readonly/>
+      <TextInput style={styles.input}  value={image}
+          onChangeText={setImage} placeholder='Occupation' readonly/>
     </View>
     <View>
       <Text>Address</Text>
-      <TextInput style={styles.input}  value={address}
-          onChangeText={setAddress} placeholder='Address' readonly/>
+      <TextInput style={styles.input}  value={phone}
+          onChangeText={setPhone} placeholder='Address' readonly/>
     </View>
     
     <Btn  name="Save"  onPress={saveProfile}/>
