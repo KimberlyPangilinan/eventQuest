@@ -130,14 +130,21 @@ export default function DetailsScreen({ route, navigation }) {
       <Pressable onPress={registerEvent}><Btn name="Edit event" disabled={isDisabled}  /></Pressable> 
       <Pressable onPress={handlePress}><Btn name="View participants" type="btnSecondary" disabled={isDisabled} /></Pressable> 
       </>
-      :page==="Events Registered"? null : 
+      :page==="Events Registered"? 
       <Btn name={isLoading?             
           <ActivityIndicator
                 animating
                 size={"small"}
                 color={"white"}
               />
-          : isRegistered} disabled={isDisabled} onPress={registerEvent} />
+          : isRegistered} disabled={true} /> : 
+      <Btn name={isLoading?             
+          <ActivityIndicator
+                animating
+                size={"small"}
+                color={"white"}
+              />
+          : isRegistered}  onPress={registerEvent} />
       }
      {isOpen?
       <RegList itemId={itemId}/>

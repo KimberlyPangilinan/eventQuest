@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, TextInput, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { FlatList, TextInput, TouchableOpacity, Text, View, StyleSheet,Image } from 'react-native';
 import { limit, onSnapshot, query, orderBy, where } from "firebase/firestore";
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db } from '../config/firebase';
 
-const Item = ({ title,onPress }) => {
+const Item = ({ title,onPress,organization,image }) => {
   return (
     
     <TouchableOpacity onPress={onPress} style={styles.item}>
       <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>{organization}</Text>
     </TouchableOpacity>
   );
 };
@@ -44,22 +45,28 @@ const SearchScreen = ({ navigation }) => {
 
   const handleSearch = (text) => {
     setSearchText(text);
-    setFilteredEvents(events.filter(({ title }) => title.toLowerCase().includes(text.toLowerCase())));
+    setFilteredEvents(events.filter(({ title, organization }) =>
+    title.toLowerCase().includes(text.toLowerCase()) ||
+    organization.toLowerCase().includes(text.toLowerCase())
+  ));
   };
 
   const renderItem = ({ item }) => (
     <Item
       title={item.title}
+      organization={item.organization}
       id={item.id}
       description={item.description}
       email={item.email}
+      image={item.image}
       onPress={() => {
         navigation.navigate('Details', {
           itemId: item.id,
           description: item.description,
           title: item.title,
           email: item.email,
-          when:item.when
+          when:item.when,
+        
         });
       }}
     />
@@ -80,9 +87,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   item: {
-    padding: 10,
+    padding: 8,
     fontSize: 18,
-    height: 44,
+    display:'flex',
+    flex:'grow'
   },
   title: {
     fontSize: 18,

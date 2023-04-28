@@ -158,7 +158,7 @@ const EventItem = ({ title, navigation }) => {
           ? <Item title = {item.eventTitle} id={item.id} image={item.image}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
-                itemId: item.id,
+                itemId: item.eventID,
                 page: "Upcoming Events"
                 });}}
                

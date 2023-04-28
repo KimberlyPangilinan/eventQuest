@@ -26,7 +26,7 @@ export const EditScreen = ({navigation}) => {
       const user = auth.currentUser;
 
      
-      if (user !== null) {
+      if (user !== "") {
         setName(user.displayName);
         setPhone(user.phoneNumber);
         setImage(user.photoURL)
@@ -153,22 +153,29 @@ export default function ProfileScreen({ navigation }) {
     })
 
     return unsubscribe
-  }, [])
+  }, [auth.currentUser?.displayName])
   return (
     <ScrollView contentContainerStyle={styles.container}>
-          <Header title="Home Screen" subtitle="My Account" message="Join us by creating or signing in an account"/>
-        
-            <View style={styles.content}>
-              
-              <Image source={{uri: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
-       style={{width: 100, height: 100,borderRadius:100}} />
-        <Text style={styles.heading}>{auth.currentUser?.email} </Text>
-              <Text>UserID: {auth.currentUser?.uid}</Text>
-              <Btn  name="Edit Profile" onPress={() => {
-            /* 1. Navigate to the Details route with params */
-            navigation.navigate('Personal Information');
-          }} />
-              <Btn type="btnSecondary" name="Logout" onPress={handleSignOut}/>
+      <View style={styles.content}>
+        <View style={{display:'flex',justifyContent: 'center', alignItems: 'center',gap:8}}>
+          <Image source={{uri: auth.currentUser?.photoURL}} style={{width: 140, height: 140,borderRadius:100}} />
+          <Text style={styles.heading}>{auth.currentUser?.displayName} </Text>
+          <Text>{auth.currentUser?.email}</Text>
+          <Text></Text>
+          <Btn  
+            name="Profile" 
+            onPress={() => {
+              navigation.navigate('Personal Information');
+            }} />
+        </View>
+        <View style={{flex:1,gap:16}}>
+          <Btn type="btnSecondary" name="Account Settings" onPress={handleSignOut}/>
+          <Btn type="btnSecondary" name="Terms and Condition" onPress={handleSignOut}/>
+          <Btn type="btnSecondary" name="Logout" onPress={handleSignOut}/>
+        </View>
+
+
+ 
             </View>
         
     </ScrollView>
@@ -178,15 +185,18 @@ export default function ProfileScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display:'flex',
+    alignItems:"space-between",
     backgroundColor: '#fff',
+    minHeight:"100%"
   },
   content: {
-    flex: 1,
-    gap:16,
+   display:'flex',
+   flexDirection:'column',
+    gap:40,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical:40
+    paddingVertical:48
   },
   content1: {
     flex: 1,
@@ -210,7 +220,7 @@ const styles = StyleSheet.create({
   heading: {
     fontWeight:'bold',
     textAlign:'left',
-    fontSize:24
+    fontSize:20
   }
 
 });

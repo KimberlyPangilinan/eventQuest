@@ -24,7 +24,7 @@ export const Header = ({subtitle,message,type}) => {
     <View style={type==="xl"?styles.headerXl: styles.header}>
       <Text style={styles.title}>{subtitle}</Text>
       {!isLoggedIn? 
-        <Text style={styles.text}>{auth.currentUser?.email}</Text>:
+        <Text style={styles.text}>{auth.currentUser?.displayName}</Text>:
         <Text style={styles.text}>{message}</Text>
       }
     </View>
