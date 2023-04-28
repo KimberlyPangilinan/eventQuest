@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, Text, StyleSheet, TextInput, Pressable,Switch } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { auth ,provider} from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GoogleButton from 'react-google-button';
+import { signInWithPopup,signInWithRedirect } from "firebase/auth";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogged,setIsLogged]=useState(false)
   const [isShown, setIsShown] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   useEffect(() => {
+    console.log(auth,"d")
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         navigation.replace('MyApp');
@@ -19,6 +21,7 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('isLogged', 'true');
       } else {
         setIsLogged(false);
+        console.log(auth)
         await AsyncStorage.removeItem('isLogged');
         await AsyncStorage.removeItem('userToken', token);
         await AsyncStorage.removeItem('userEmail', user.email);
@@ -29,6 +32,34 @@ const LoginScreen = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
+  const signUpWithGoogle = async () => {
+    
+    try {
+      signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+   
+  
   const handleSignIn = useCallback(async () => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
@@ -89,6 +120,9 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.link}>
             Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text>
           </Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={signUpWithGoogle}>
+          <Text style={styles.buttonText}>Login</Text>
         </Pressable>
       </View>
     </ScrollView>

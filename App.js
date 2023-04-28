@@ -20,6 +20,7 @@ import Picker from './src/screen/Picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth,  } from "./src/config/firebase";
 import { signInWithCustomToken,signInWithEmailAndPassword } from 'firebase/auth';
+import EditEventScreen from './src/screen/EditEventScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -96,13 +97,13 @@ function App() {
    
       const userEmail = await AsyncStorage.getItem('userEmail');
       const userPassword = await AsyncStorage.getItem('userPassword');
-      const userToken = await AsyncStorage.getItem('userToken');
+   //   const userToken = await AsyncStorage.getItem('userToken');
       const isLogged = await AsyncStorage.getItem('isLogged');
       if ( isLogged) {
         console.log("succcessfuly get")
         console.log(userEmail);
         console.log(userPassword);
-        signInWithEmail(userToken,userEmail,userPassword);
+        signInWithEmail(userEmail,userPassword);
       } else {
         console.log(auth + 'dauthhh');
       }
@@ -136,6 +137,7 @@ function App() {
             <Stack.Screen name="Events Created" component={ListScreen} initialParams={{ title: "Events Created" }} />
             <Stack.Screen name="Personal Information" component={EditScreen} />
             <Stack.Screen name="Search Screen " component={SearchScreen} />
+            <Stack.Screen name="Edit Event" component={EditEventScreen} />
             <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }} />
           </Stack.Navigator>
     </NavigationContainer>

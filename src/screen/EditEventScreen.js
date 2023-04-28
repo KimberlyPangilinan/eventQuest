@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getFormatedDate } from "react-native-modern-datepicker";
 import { storage } from '../config/firebase';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-const CreateScreen = ({ navigation }) => {
+const EditEventScreen = ({ navigation,route }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -31,7 +31,7 @@ const CreateScreen = ({ navigation }) => {
   const hour = parseInt(dateParts[2].substr(3, 2), 10);
   const minute = parseInt(dateParts[2].substr(6, 2), 10);
   const dateObj = new Date(year, month, day, hour, minute);
-
+  const { itemId } = route.params;
   function handleChangeStartDate(propDate) {
     setStartedDate(propDate);
   }
@@ -150,7 +150,7 @@ const CreateScreen = ({ navigation }) => {
         
         <View>
         <Text>Event/Webinar Title</Text>
-        <TextInput style={styles.input}  value={title}
+        <TextInput style={styles.input}  value={itemId}
             onChangeText={setTitle} placeholder='Event Title' />
         </View>
         <View>
@@ -225,4 +225,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CreateScreen;
+export default EditEventScreen;

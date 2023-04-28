@@ -186,7 +186,6 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     display:'flex',
-    alignItems:"space-between",
     backgroundColor: '#fff',
     minHeight:"100%"
   },

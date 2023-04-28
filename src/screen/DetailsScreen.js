@@ -5,6 +5,7 @@ import { collection, addDoc, getDocs,getDoc, where, query, doc, updateDoc } from
 import { db,auth } from '../config/firebase';
 import EventItem from '../components/EventItem';
 import RegList from '../components/RegList';
+import EditEventScreen from './EditEventScreen';
 export default function DetailsScreen({ route, navigation }) {
   const [isLoggedIn, setIsLoggedIn] = React.useState("");
   const [name, setName] = React.useState("");
@@ -63,8 +64,6 @@ export default function DetailsScreen({ route, navigation }) {
 
       if (docSnap.exists()) {
         const data = docSnap.data();
-        console.log("Document data:", data);
-        console.log(data.email);
         setDescription(data.description);
         setTitle(data.title);
         setEmail(data.email);
@@ -76,7 +75,7 @@ export default function DetailsScreen({ route, navigation }) {
         setWhen(formattedDate); 
         setImage(data.image);
       } else {
-        console.log("No such documentm!");
+        console.log("No such document!");
       }
     };
     fetchProfile();
@@ -85,7 +84,7 @@ export default function DetailsScreen({ route, navigation }) {
   }, []);
 
 
-  const registerEvent = async () => {
+  const registerEvent = async (navigation) => {
     try {
       if (!auth.currentUser) {
         throw new Error("Registration failed, you need to login first");
@@ -127,7 +126,13 @@ export default function DetailsScreen({ route, navigation }) {
       <Text> {when}</Text>
       <Text>Description: {JSON.stringify(description)}</Text>
       {page==="Events Created"?<>
-      <Pressable onPress={registerEvent}><Btn name="Edit event" disabled={isDisabled}  /></Pressable> 
+
+      <Btn name="Edit event" onPress={() => {
+              navigation.navigate('Edit Event',{
+                itemId: itemId,
+
+                });
+            }}/>
       <Pressable onPress={handlePress}><Btn name="View participants" type="btnSecondary" disabled={isDisabled} /></Pressable> 
       </>
       :page==="Events Registered"? 
