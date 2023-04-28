@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "904503743793",
+    "project_id": "eventquest-8eb15",
+    "storage_bucket": "eventquest-8eb15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904503743793:android:cc57939cce79719cadcc10",
+        "android_client_info": {
+          "package_name": "com.kimberlypangilinan.eventsQuest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904503743793-6vjotsfo8o1mjua27khoapqh7k99p56m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kimberlypangilinan.eventsQuest",
+            "certificate_hash": "0cb4eadcbbc3c99fa34b044d8048cc26d7dff13b"
+          }
+        },
+        {
+          "client_id": "904503743793-alk695vg83jm4qj6fkfp9rj03srd819j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kimberlypangilinan.eventsQuest",
+            "certificate_hash": "2a16994c1df601eb5c3174b6cbfb0b19813e9d4e"
+          }
+        },
+        {
+          "client_id": "904503743793-kpi4gg4cqo721q1u3qd3bu4rv7f31m2s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6uJqZ64YXzTgM6cyPzZBG0Q1nE7zrWiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904503743793-cvvqo7mmdn7sm6phae7i8mp0h1muhvfh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

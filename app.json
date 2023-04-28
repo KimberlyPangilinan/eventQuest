@@ -22,6 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile":"./google-services.json",
       "package": "com.kimberlypangilinan.eventsQuest",
       "permissions": [
         "android.permission.RECORD_AUDIO"

@@ -3,8 +3,9 @@ import { View, ScrollView, Text, StyleSheet, TextInput, Pressable,Switch } from 
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth ,provider} from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import GoogleButton from 'react-google-button';
+import GoogleButton from 'react-google-button'
 import { signInWithPopup,signInWithRedirect } from "firebase/auth";
+import { Btn } from '../components/Btn';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -110,20 +111,21 @@ const LoginScreen = ({ navigation }) => {
             onValueChange={()=>setIsShown(!isShown)}
             value={isShown}
           />
-          <Text style={{color: '#a0a0a0'}}>Show Password</Text>
+          <Text style={{color: '#a0a0a0', marginTop:14}}>Show Password</Text>
         </View>
 
         <Pressable style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
+   
         <Pressable onPress={() => navigation.navigate('Signup')}>
           <Text style={styles.link}>
             Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text>
           </Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={signUpWithGoogle}>
-          <Text style={styles.buttonText}>Login</Text>
-        </Pressable>
+     
+    
+        
       </View>
     </ScrollView>
   );
@@ -182,6 +184,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop:80
+  },
+  buttonSecondary:{
+    height: 50,
+    minWidth:100,
+    width: '100%',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#654dff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:16
+  },
+  buttonSText: {
+    color: '#654dff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   buttonText: {
     color: '#fff',

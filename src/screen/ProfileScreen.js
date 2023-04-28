@@ -76,7 +76,7 @@ export const EditScreen = ({navigation}) => {
   return (
     <View style={styles.content}>
     <Text style={styles.heading}>{name?name: "Hello User"}</Text>
-    <Image source={{uri: image? image: 'https://media.licdn.com/dms/image/D4D03AQHHc2GrG_M77Q/profile-displayphoto-shrink_200_200/0/1675865866867?e=1686182400&v=beta&t=UAJh0hkFa8DVTQIi_vWrxJFwRm2rtvk6PUnP2Sl-AvE'}}
+    <Image source={{uri: image? image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}}
        style={{width: 100, height: 100,borderRadius:100}} />
     <View>
       <Text>Full Name</Text>

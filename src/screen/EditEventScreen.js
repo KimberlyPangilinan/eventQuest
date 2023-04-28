@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Image, ScrollView, FlatList, TextInput, Text,Button, View, Pressable, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db,auth } from '../config/firebase';
+import {  getDoc, where, query, doc, updateDoc } from 'firebase/firestore';
 import EventItem from '../components/EventItem';
 import { Header } from '../components/Header';
 import { Btn } from '../components/Btn';
@@ -18,11 +19,16 @@ const EditEventScreen = ({ navigation,route }) => {
   const [when, setWhen] = useState('');
   const [where, setWhere] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState('');
+
   const today = new Date();
   const startDate = getFormatedDate(today.setDate(today.getDate() + 1),"YYYY/MM/DD");
-  const [selectedStartDate, setSelectedStartDate] = useState("2023/03/25 00:00");
-  const [startedDate, setStartedDate] = useState("//");
+  
+
+    const { month1 } = route.params;
+  const { day1 } = route.params;
+  const { year1 } = route.params;
+  const [selectedStartDate, setSelectedStartDate] = useState(`${year1}/${month1}/${day1} 00:00`);
   const dateString = selectedStartDate;
   const dateParts = dateString.split("/");
   const year = parseInt(dateParts[0], 10);
@@ -32,37 +38,60 @@ const EditEventScreen = ({ navigation,route }) => {
   const minute = parseInt(dateParts[2].substr(6, 2), 10);
   const dateObj = new Date(year, month, day, hour, minute);
   const { itemId } = route.params;
+  const { imagePrev } = route.params;
+  const { startedDate } = route.params;
+
+  React.useEffect(() => {
+   
+    const fetchEvent = async () => {
+      const docRef = doc(db, "events", itemId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setDescription(data.description);
+        setTitle(data.title);
+     
+        setOrganization(data.organization)
+        setWhere(data.where)
+        setCategory(data.category)
+   
+     
+
+      } else {
+        console.log("No such document!");
+      }
+    };
+  
+    fetchEvent();
+  }, []);
   function handleChangeStartDate(propDate) {
     setStartedDate(propDate);
   }
-  const addEvent = async () => {
+  const editEvent = async () => {
     try{
-       const docRef = await addDoc(collection(db, "events"), {
+       const docRef = doc(db,"events",itemId);
+       await updateDoc(docRef,{
         title: title,
         description: description,
         organization:organization,
         category:category,
         when: dateObj,
         where: where,
-        datePosted: new Date(),
+ 
         email:auth.currentUser?.email,
-        status:'pending',
-        image:image
-      });
-      alert("Event submission successful! Pending admin approval for posting.")
+
+        image:imagePrev? imagePrev: image
+       })
+      
+      
+      alert("Event successfully updated.")
       navigation.replace('MyApp');
-      setTitle("");
-      setCategory("")
-      setDescription("")
-      setOrganization("")
+
     }
     catch (error) {
-      alert("Registration failed, you need to login first");
-      navigation.replace('Login');
-      setTitle("");
-      setCategory("")
-      setDescription("")
-      setOrganization("")
+      alert("You cannot update an event past due");
+  
      
     }}
    
@@ -137,8 +166,9 @@ const EditEventScreen = ({ navigation,route }) => {
             />
           </View>
           
-        : <TouchableOpacity  onPress={pickImage} style={{width: 320, backgroundColor:"#e9eef1",height: 120,borderRadius:8,marginVertical:16,display:'flex',alignItems:"center",justifyContent:"center"}}>
-            <Text>Choose an image</Text>
+        : <TouchableOpacity  onPress={pickImage} style={{width: 320, backgroundColor:"#e9eef1",height:imagePrev?320: 120,borderRadius:8,marginVertical:16,display:'flex',alignItems:"center",justifyContent:"center"}}>
+       {imagePrev?<Image source={{uri:imagePrev}} style={{width: 320, height: 320,borderRadius:8}} />:<Text>Choose an image</Text>}  
+         
           </TouchableOpacity>
         }</View>:
         <TouchableOpacity onPress={pickImage}>
@@ -150,7 +180,7 @@ const EditEventScreen = ({ navigation,route }) => {
         
         <View>
         <Text>Event/Webinar Title</Text>
-        <TextInput style={styles.input}  value={itemId}
+        <TextInput style={styles.input}  value={title}
             onChangeText={setTitle} placeholder='Event Title' />
         </View>
         <View>
@@ -186,7 +216,8 @@ const EditEventScreen = ({ navigation,route }) => {
             
         </View>
        
-        <Btn  name="Post" onPress={addEvent} />
+        <Btn  name="Update Event" onPress={editEvent} />
+        <Btn  name="Delete Event" type="btnSecondary" />
         
     </ScrollView>
   </View>

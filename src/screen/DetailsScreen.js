@@ -14,6 +14,8 @@ export default function DetailsScreen({ route, navigation }) {
   const [description, setDescription] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [where, setWhere] = React.useState("");
+  const [category, setCategory] = React.useState("");
   const [organization, setOrganization] = React.useState("");
   const [when, setWhen] = React.useState("");
   const [timestamp, setTimestamp] = React.useState("");
@@ -22,6 +24,9 @@ export default function DetailsScreen({ route, navigation }) {
   const { itemId } = route.params;
   const { page } = route.params;
   const [isLoading, setIsLoading] = React.useState(false);
+  const [month, setMonth] = React.useState("");
+  const [day, setDay] = React.useState("");
+  const [year, setYear] = React.useState("");
   React.useEffect(() => {
     const fetchProfile = async () => {
       const q = query(
@@ -68,11 +73,16 @@ export default function DetailsScreen({ route, navigation }) {
         setTitle(data.title);
         setEmail(data.email);
         setOrganization(data.organization)
+        setWhere(data.where)
+        setCategory(data.category)
         const timestamp = data.when;
         setTimestamp(data.when);
         const date = timestamp.toDate();
-        const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        const formattedDate = `${date.getFullYear()}/${date.getMonth() }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
         setWhen(formattedDate); 
+        setMonth(date.getMonth())
+        setDay(date.getDate())
+        setYear(date.getFullYear())
         setImage(data.image);
       } else {
         console.log("No such document!");
@@ -130,7 +140,15 @@ export default function DetailsScreen({ route, navigation }) {
       <Btn name="Edit event" onPress={() => {
               navigation.navigate('Edit Event',{
                 itemId: itemId,
-
+                imagePrev:image,
+                organization:organization,
+                startedDate:when,
+                description:description,
+                where:where,
+                category:category,
+                month1:month,
+                day1:day,
+                year1:year
                 });
             }}/>
       <Pressable onPress={handlePress}><Btn name="View participants" type="btnSecondary" disabled={isDisabled} /></Pressable> 
