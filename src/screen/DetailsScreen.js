@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text,ScrollView, View, Button,StyleSheet,Image, Pressable,ActivityIndicator } from 'react-native';
 import { Btn } from '../components/Btn';
-import { collection, addDoc, getDocs,getDoc, where, query, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs,getDoc, where, query, doc, updateDoc,deleteDoc } from 'firebase/firestore';
 import { db,auth } from '../config/firebase';
 import EventItem from '../components/EventItem';
 import RegList from '../components/RegList';
@@ -14,7 +14,7 @@ export default function DetailsScreen({ route, navigation }) {
   const [description, setDescription] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [email, setEmail] = React.useState("");
-
+  const [status, setStatus] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [organization, setOrganization] = React.useState("");
   const [when, setWhen] = React.useState("");
@@ -39,7 +39,7 @@ export default function DetailsScreen({ route, navigation }) {
         setName(doc.data().name);
       }
     };
-
+  
     const checkRegistration = async () => {
       setIsLoading(true)
       const q = query(
@@ -63,6 +63,7 @@ export default function DetailsScreen({ route, navigation }) {
         setIsDisabled(false);
       }
     };
+ 
     const fetchEvent = async () => {
       const docRef = doc(db, "events", itemId);
       const docSnap = await getDoc(docRef);
@@ -91,9 +92,32 @@ export default function DetailsScreen({ route, navigation }) {
     fetchProfile();
     checkRegistration();
     fetchEvent();
+
   }, []);
 
+  const deleteRegistration = async () => {
+    try{
+      const q = query(
+        collection(db, "registration"),
+        where("email", "==", auth.currentUser?.email),
+        where("eventID", "==", itemId)
+      );
+      const querySnapshot = await getDocs(q);
 
+      querySnapshot.forEach((doc) => {
+        deleteDoc(doc.ref);
+      });
+  
+      
+      alert("Registration successfully cancelled.")
+      navigation.replace('MyApp');
+
+    }
+    catch (error) {
+      alert(error);
+  
+     
+    }}
   const registerEvent = async (navigation) => {
     try {
       if (!auth.currentUser) {
@@ -161,13 +185,23 @@ export default function DetailsScreen({ route, navigation }) {
                 color={"white"}
               />
           : isRegistered} disabled={true} /> : 
-      <Btn name={isLoading?             
+          timestamp==new Date()?null:
+          isRegistered =="Registered"?     <Btn name={isLoading?             
           <ActivityIndicator
                 animating
                 size={"small"}
                 color={"white"}
               />
-          : isRegistered}  onPress={registerEvent} disabled={isDisabled}/>
+          : "Cancel"}  onPress={deleteRegistration} disabled={false}/> :
+           <Btn name={isLoading?             
+          <ActivityIndicator
+                animating
+                size={"small"}
+                color={"white"}
+              />
+          : "Register"}  onPress={registerEvent} />
+
+ 
       }
      {isOpen?
       <RegList itemId={itemId}/>

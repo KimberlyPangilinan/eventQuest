@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text,Image } from 'react-native';
 import { auth,  } from "../config/firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -24,8 +24,12 @@ export const Header = ({subtitle,message,type}) => {
     <View style={type==="xl"?styles.headerXl: styles.header}>
       <Text style={styles.title}>{subtitle}</Text>
       {!isLoggedIn? 
-        <Text style={styles.text}>{auth.currentUser?.displayName}</Text>:
-        <Text style={styles.text}>{message}</Text>
+      <View style={{display:'flex', flexDirection:'row',jusifyItems:'center',alignItems:'center',gap:8}}>
+      <Image source={{ uri: auth.currentUser?.photoURL }} style={{width: 40,height: 40,borderRadius:100,marginVertical:16}} />
+          <Text style={styles.text}>{auth.currentUser?.displayName}</Text>
+      </View>
+      :
+            <Text style={styles.text}>{message}</Text>
       }
     </View>
   );
