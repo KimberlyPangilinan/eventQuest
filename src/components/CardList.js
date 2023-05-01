@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-
+import {collection, query, where, getDocs,getCountFromServer} from 'firebase/firestore';
+import { db,auth } from '../config/firebase';
 const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -23,20 +24,69 @@ const DATA = [
   },
 ];
 
-const Item = ({item, onPress, backgroundColor, textColor}) => (
+const Item = ({item, onPress, backgroundColor, textColor, count}) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-    <Text style={[styles.number, {color: textColor}]}>0</Text>
+    <Text style={[styles.number, {color: textColor}]}>{count}</Text>
     <Text style={[styles.title, {color: textColor}]}>{item.title}</Text>
   </TouchableOpacity>
 );
 
 const CardList = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState();
+  const [createdCount, setCreatedCount] = useState(0);
+  const [registeredCount, setRegisteredCount] = useState(0);
+  const [upcomingCount, setUpcomingCount] = useState(0);
+
+  useEffect(() => {
+    try{ 
+      const fetchCreated = async () => {
+        const coll = collection(db, "events");
+        const q = query(coll,  where('email', '==', auth.currentUser ? auth.currentUser.email : null));
+
+        const snapshot = await getCountFromServer(q);
+        console.log('created count: ', snapshot.data().count);
+        console.log(auth.currentUser.email)
+        setCreatedCount(snapshot.data().count);
+      };
+      
+      const fetchRegistered = async () => {
+        const coll = collection(db, "registration");
+        const q = query(coll, where('email', '==', auth.currentUser ? auth.currentUser.email : null));
+
+        const snapshot = await getCountFromServer(q);
+        console.log('registered count: ', snapshot.data().count);
+        console.log(auth.currentUser.email)
+        setRegisteredCount(snapshot.data().count);
+      };
+      const fetchUpcoming = async () => {
+        const coll = collection(db, "registration");
+        const q = query(coll,  where('email', '==', auth.currentUser ? auth.currentUser.email : null),
+        where('when', '>=', new Date()));
+
+        const snapshot = await getCountFromServer(q);
+        console.log('registered count: ', snapshot.data().count);
+        console.log(auth.currentUser.email)
+        setUpcomingCount(snapshot.data().count);
+      };
+      fetchCreated();
+      fetchRegistered();
+      fetchUpcoming()
+    
+    }catch(error){
+        console.log(error)
+    }
+   
+  }, []);
 
   const renderItem = ({item,handle}) => {
     const backgroundColor = item.id === selectedId ? '#7865f0' : '#f1f0f4' ;
     const color = item.id === selectedId ? 'white' : 'black';
-
+    const count =       item.id === 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba' ? upcomingCount :
+    item.id === '3ac68afc-c605-48d3-a4f8-fbd91aa97f63' ? registeredCount :
+    item.id === '58694a0f-3da1-471f-bd96-145571e29d72' ? createdCount :
+           
+              0;
+    
     return (
       <Item
         item={item}
@@ -47,7 +97,7 @@ const CardList = ({ navigation }) => {
         }}
         backgroundColor={backgroundColor}
         textColor={color}
-        
+        count={count}
       />
     );
   };
@@ -59,13 +109,10 @@ const CardList = ({ navigation }) => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         extraData={selectedId}
-       
       />
     </SafeAreaView>
   );
 };
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
