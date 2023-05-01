@@ -35,7 +35,7 @@ export default function ListScreen({ route, navigation }) {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding:48 ,gap:16}}>
-      <EventItem title={title}  navigation={navigation}/>
+      <EventItem title={title}  navigation={navigation} />
     </View>
   );
 }

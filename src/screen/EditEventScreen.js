@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Image, ScrollView, FlatList, TextInput, Text,Button, View, Pressable, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db,auth } from '../config/firebase';
-import {  getDoc, where, query, doc, updateDoc } from 'firebase/firestore';
+import {  getDoc, where, deleteDoc,query, doc, updateDoc } from 'firebase/firestore';
 import EventItem from '../components/EventItem';
 import { Header } from '../components/Header';
 import { Btn } from '../components/Btn';
@@ -32,7 +32,7 @@ const EditEventScreen = ({ navigation,route }) => {
   const dateString = selectedStartDate;
   const dateParts = dateString.split("/");
   const year = parseInt(dateParts[0], 10);
-  const month = parseInt(dateParts[1], 10) - 1;
+  const month = parseInt(dateParts[1], 10) ;
   const day = parseInt(dateParts[2].substr(0, 2), 10);
   const hour = parseInt(dateParts[2].substr(3, 2), 10);
   const minute = parseInt(dateParts[2].substr(6, 2), 10);
@@ -94,6 +94,19 @@ const EditEventScreen = ({ navigation,route }) => {
   
      
     }}
+    const deleteEvent = async () => {
+      try{
+        await deleteDoc(doc(db, "events", itemId));
+        
+        alert("Event successfully deleted.")
+        navigation.replace('MyApp');
+  
+      }
+      catch (error) {
+        alert(error);
+    
+       
+      }} 
    
     const pickImage = async () => {
       // No permissions request is necessary for launching the image library
@@ -217,7 +230,7 @@ const EditEventScreen = ({ navigation,route }) => {
         </View>
        
         <Btn  name="Update Event" onPress={editEvent} />
-        <Btn  name="Delete Event" type="btnSecondary" />
+        <Btn  name="Delete Event" type="btnSecondary" onPress={deleteEvent} />
         
     </ScrollView>
   </View>

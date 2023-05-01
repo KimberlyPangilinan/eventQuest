@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, TextInput, TouchableOpacity, Text, View, StyleSheet,Image } from 'react-native';
+import {Image, FlatList, TextInput, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { limit, onSnapshot, query, orderBy, where } from "firebase/firestore";
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db } from '../config/firebase';
@@ -20,7 +20,6 @@ const Item = ({ title,onPress,organization,image }) => {
 const Seperator = () => (
   <View style={{ borderBottomWidth: 0.5, borderColor: '#cbcad6' }} />
 );
-
 const SearchBar = ({ value, onChangeText }) => (
   <TextInput
     style={styles.searchBar}
@@ -57,18 +56,16 @@ const SearchScreen = ({ navigation }) => {
     organization.toLowerCase().includes(text.toLowerCase()) ||
     category.toLowerCase().includes(text.toLowerCase()) ||
     email.toLowerCase().includes(text.toLowerCase())
-    
-  ));
+    ));
   };
 
   const renderItem = ({ item }) => (
     <Item
       title={item.title}
-      organization={item.organization}
       id={item.id}
       description={item.description}
-      email={item.email}
       image={item.image}
+      email={item.email}
       onPress={() => {
         navigation.navigate('Details', {
           itemId: item.id,
@@ -76,7 +73,7 @@ const SearchScreen = ({ navigation }) => {
           title: item.title,
           email: item.email,
           when:item.when,
-        
+          image:item.image
         });
       }}
     />
@@ -97,12 +94,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   item: {
-    padding: 8,
-    fontSize: 18,
     display:'flex',
-    flex:'grow',
-    flexDirection:"row",
-    gap:8
+    flexDirection:'row',
+    gap:4,
+    padding: 10,
+    fontSize: 18,
+    minHeight: 44,
   },
   title: {
     fontSize: 18,

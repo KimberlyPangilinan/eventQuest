@@ -1,20 +1,29 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, Text, StyleSheet, TextInput, Pressable,Switch } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth ,provider} from '../config/firebase';
+import { signInWithEmailAndPassword,sendSignInLinkToEmail } from 'firebase/auth';
+import { auth } from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import GoogleButton from 'react-google-button'
-import { signInWithPopup,signInWithRedirect } from "firebase/auth";
-import { Btn } from '../components/Btn';
+const actionCodeSettings = {
+  // URL you want to redirect back to. The domain (www.example.com) for this
+  // URL must be in the authorized domains list in the Firebase Console.
+  url:'https://eventsquest.page.link/naxz',
+  handleCodeInApp: true,
 
+  android: {
+    packageName: 'com.kimberlypangilinan.eventsQuest',
+    installApp: true,
+    minimumVersion: '12'
+  },
+ 
+};
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogged,setIsLogged]=useState(false)
   const [isShown, setIsShown] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   useEffect(() => {
-    console.log(auth,"d")
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         navigation.replace('MyApp');
@@ -22,7 +31,6 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('isLogged', 'true');
       } else {
         setIsLogged(false);
-        console.log(auth)
         await AsyncStorage.removeItem('isLogged');
         await AsyncStorage.removeItem('userToken', token);
         await AsyncStorage.removeItem('userEmail', user.email);
@@ -33,34 +41,30 @@ const LoginScreen = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-  const signUpWithGoogle = async () => {
-    
-    try {
-      signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-    } catch (error) {
-      alert(error.message);
+  const emailSignIn = useCallback(async () => {
+    if (!email || email.trim() === '') {
+      // handle error: email is blank or undefined
+      return;
     }
-  };
-   
   
+    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+    .then(() => {
+      // The link was successfully sent. Inform the user.
+      // Save the email locally so you don't need to ask the user for it again
+      // if they open the link on the same device.
+      console.log(email)
+      alert("email sent: ",email)
+      AsyncStorage.setItem('emailForSignIn', email);
+      
+  
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ...
+      alert(error)});
+  }, [auth, email, actionCodeSettings]);
   const handleSignIn = useCallback(async () => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
@@ -103,7 +107,7 @@ const LoginScreen = ({ navigation }) => {
           returnKeyType='go'
           autoCorrect={false}
         />
-        <View style={{display:"flex",flexDirection:"row",gap:8}}>
+        <View style={{display:"flex",flexDirection:"row",gap:8,justifyItems:'center',alignItems:'center'}}>
           <Switch
             trackColor={{false: '#767577', true: '#81b0ff'}}
             thumbColor={isShown ? '#f5dd4b' : '#f4f3f4'}
@@ -111,21 +115,17 @@ const LoginScreen = ({ navigation }) => {
             onValueChange={()=>setIsShown(!isShown)}
             value={isShown}
           />
-          <Text style={{color: '#a0a0a0', marginTop:14}}>Show Password</Text>
+          <Text style={{color: '#a0a0a0'}}>Show Password</Text>
         </View>
 
         <Pressable style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
-   
         <Pressable onPress={() => navigation.navigate('Signup')}>
           <Text style={styles.link}>
             Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text>
           </Text>
         </Pressable>
-     
-    
-        
       </View>
     </ScrollView>
   );
@@ -184,22 +184,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop:80
-  },
-  buttonSecondary:{
-    height: 50,
-    minWidth:100,
-    width: '100%',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#654dff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop:16
-  },
-  buttonSText: {
-    color: '#654dff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   buttonText: {
     color: '#fff',

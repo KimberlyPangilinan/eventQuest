@@ -14,7 +14,7 @@ export default function DetailsScreen({ route, navigation }) {
   const [description, setDescription] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [where, setWhere] = React.useState("");
+
   const [category, setCategory] = React.useState("");
   const [organization, setOrganization] = React.useState("");
   const [when, setWhen] = React.useState("");
@@ -73,7 +73,7 @@ export default function DetailsScreen({ route, navigation }) {
         setTitle(data.title);
         setEmail(data.email);
         setOrganization(data.organization)
-        setWhere(data.where)
+    
         setCategory(data.category)
         const timestamp = data.when;
         setTimestamp(data.when);
@@ -144,7 +144,7 @@ export default function DetailsScreen({ route, navigation }) {
                 organization:organization,
                 startedDate:when,
                 description:description,
-                where:where,
+             
                 category:category,
                 month1:month,
                 day1:day,
@@ -167,7 +167,7 @@ export default function DetailsScreen({ route, navigation }) {
                 size={"small"}
                 color={"white"}
               />
-          : isRegistered}  onPress={registerEvent} />
+          : isRegistered}  onPress={registerEvent} disabled={isDisabled}/>
       }
      {isOpen?
       <RegList itemId={itemId}/>

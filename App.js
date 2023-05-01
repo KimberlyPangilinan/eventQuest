@@ -97,13 +97,13 @@ function App() {
    
       const userEmail = await AsyncStorage.getItem('userEmail');
       const userPassword = await AsyncStorage.getItem('userPassword');
-   //   const userToken = await AsyncStorage.getItem('userToken');
+      const userToken = await AsyncStorage.getItem('userToken');
       const isLogged = await AsyncStorage.getItem('isLogged');
       if ( isLogged) {
         console.log("succcessfuly get")
         console.log(userEmail);
         console.log(userPassword);
-        signInWithEmail(userEmail,userPassword);
+        signInWithEmail(userToken,userEmail,userPassword);
       } else {
         console.log(auth + 'dauthhh');
       }
@@ -113,7 +113,6 @@ function App() {
 
   }, []);
   
-
   //this block of code is used to fetch the log in credentials of the user to stay logged in even when the app is closed
   const signInWithEmail = async (userToken,userEmail,userPassword) => {
     try {

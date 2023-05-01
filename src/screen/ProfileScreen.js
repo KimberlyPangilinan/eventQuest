@@ -1,24 +1,84 @@
 
 
 import React, { useState,useEffect } from 'react';
-import {Image, Pressable,Button, View,ScrollView, TextInput, Text,StyleSheet,Alert } from 'react-native';
+import {Image, Pressable,Button, TouchableOpacity,View,ScrollView, TextInput, Text,StyleSheet,Alert,ActivityIndicator } from 'react-native';
 import { auth,  } from "../config/firebase";
-import {  signOut } from "firebase/auth";
+import {  signOut,sendEmailVerification } from "firebase/auth";
 import {Header} from '../components/Header'
 import { Btn } from '../components/Btn';
-import { collection, addDoc, getDocs, where, query, doc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, addDoc, getDocs, where, query, doc, updateDoc, } from 'firebase/firestore';
 import { db} from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuth, updateProfile } from "firebase/auth";
+import * as ImagePicker from 'expo-image-picker';
+import { storage } from '../config/firebase';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const EditScreen = ({navigation}) => {
 
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState();
   const [image, setImage] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [occupation, setOccupation] = useState('');
   const [address, setAddress] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
+  const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+      setIsLoading(true)
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 4],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      if (!result.canceled) {
+        
+        const uploadURL=await uploadImageAsync(result.assets[0].uri)
+        setImage(uploadURL);
+      setInterval(() => {
+        setIsLoading(false)
+      }, 2000);
+      }else{
+        setImage(null)
+        setInterval(() => {
+          setIsLoading(false)
+        }, 2000);
+      }
+    };
+    const uploadImageAsync = async (uri)=>{
+
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function (e) {
+          console.log(e);
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+      
+      try{
+        const storageRef =ref(storage,`images/image-${Date.now()}`)
+        const result = await uploadBytes(storageRef,blob)
+        blob.close();
+        return await getDownloadURL(storageRef);
+      }catch(error){
+        alert(`Error: ${error}`)
+        console.log(error)
+      }
+
+  //const fileRef = ref(getStorage(), uuid.v4());
+  //const result = await uploadBytes(fileRef, blob);
+    }
 
   useEffect(() => {
     // Fetch the user's profile data from Firestore and update the state
@@ -30,21 +90,24 @@ export const EditScreen = ({navigation}) => {
         setName(user.displayName);
         setPhone(user.phoneNumber);
         setImage(user.photoURL)
+        console.log(user)
       }
     };
     fetchProfile();
+    setImage(auth.currentUser?.photoURL);
+    setName(auth.currentUser?.displayName);
   }, []);
   const saveProfile =async()=>{
     await updateProfile(auth.currentUser, {
-    displayName: name, photoURL: image, phoneNumber:phone
+    displayName: name, phoneNumber:phone,photoURL:image
   }).then(() => {
     const user = auth.currentUser;
     console.log(user)
    console.log(user.displayName)
-    // ...
+   alert("Profile successfuly saved.")
+   navigation.replace('MyApp');  // ...
   }).catch((error) => {
-    // An error occurred
-    // ...
+   alert(error)
   });}
   const saveProfile1 = async () => {
     const q = query(collection(db, "userProfile"), where("email", "==", auth.currentUser?.email));
@@ -73,29 +136,52 @@ export const EditScreen = ({navigation}) => {
     }
   };
 
+  const sendVerification = async()=>{
+    sendEmailVerification(auth.currentUser)
+  .then(() => {
+    // Email verification sent!
+    // ...
+    alert("Email verification sent")
+  });
+  }
+
   return (
     <View style={styles.content}>
     <Text style={styles.heading}>{name?name: "Hello User"}</Text>
-    <Image source={{uri: image? image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}}
-       style={{width: 100, height: 100,borderRadius:100}} />
+    {!image?
+        <View>
+          {isLoading?
+          <View style={{width: 320, backgroundColor:"#e9eef1",height: 120,borderRadius:8,marginVertical:16,display:'flex',alignItems:"center",justifyContent:"center"}}>
+            <ActivityIndicator
+              animating
+              size={"large"}
+              color={"gray"}
+            />
+          </View>
+          
+        : <TouchableOpacity  onPress={pickImage} style={{width: 320, backgroundColor:"#e9eef1",height: 120,borderRadius:8,marginVertical:16,display:'flex',alignItems:"center",justifyContent:"center"}}>
+            <Text>Choose an image</Text>
+          </TouchableOpacity>
+        }</View>:
+        <TouchableOpacity onPress={pickImage}>
+        <Image source={{ uri: image }} style={{width: 200,height: 200,borderRadius:8,marginVertical:16}} />
+
+        </TouchableOpacity>
+         }
+   
     <View>
       <Text>Full Name</Text>
       <TextInput style={styles.input}  value={name}
           onChangeText={setName} placeholder='Full name' readonly/>
     </View>
     <View>
-      <Text>Occupation</Text>
-      <TextInput style={styles.input}  value={image}
-          onChangeText={setImage} placeholder='Occupation' readonly/>
-    </View>
-    <View>
-      <Text>Address</Text>
+      <Text>Phone</Text>
       <TextInput style={styles.input}  value={phone}
-          onChangeText={setPhone} placeholder='Address' readonly/>
+          onChangeText={setPhone} placeholder='Phone number' readonly/>
     </View>
-    
+  
     <Btn  name="Save"  onPress={saveProfile}/>
-    
+    <Btn  name="Emailverification"  onPress={sendVerification}/>
   </View>
 
   );
@@ -169,8 +255,8 @@ export default function ProfileScreen({ navigation }) {
             }} />
         </View>
         <View style={{flex:1,gap:16}}>
-          <Btn type="btnSecondary" name="Account Settings" onPress={handleSignOut}/>
-          <Btn type="btnSecondary" name="Terms and Condition" onPress={handleSignOut}/>
+          <Btn type="btnSecondary" name="Account Settings" />
+          <Btn type="btnSecondary" name="Terms and Condition" />
           <Btn type="btnSecondary" name="Logout" onPress={handleSignOut}/>
         </View>
 
