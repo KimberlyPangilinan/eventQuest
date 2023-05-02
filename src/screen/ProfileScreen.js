@@ -22,6 +22,7 @@ export const EditScreen = ({navigation}) => {
   const [birthdate, setBirthdate] = useState('');
   const [occupation, setOccupation] = useState('');
   const [address, setAddress] = useState('');
+  const [creation,setCreation]=useState('')
 
   const [isLoading, setIsLoading] = useState(false);
   const pickImage = async () => {
@@ -90,6 +91,7 @@ export const EditScreen = ({navigation}) => {
         setName(user.displayName);
         setPhone(user.phoneNumber);
         setImage(user.photoURL)
+        setCreation(user.metadata.creationTime)
         console.log(user)
       }
     };
@@ -146,7 +148,7 @@ export const EditScreen = ({navigation}) => {
   }
 
   return (
-    <View style={styles.content}>
+    <ScrollView contentContainerStyle={styles.content}>
     <Text style={styles.heading}>{name?name: "Hello User"}</Text>
     {!image?
         <View>
@@ -164,12 +166,25 @@ export const EditScreen = ({navigation}) => {
           </TouchableOpacity>
         }</View>:
         <TouchableOpacity onPress={pickImage}>
-        <Image source={{ uri: image }} style={{width: 200,height: 200,borderRadius:8,marginVertical:16}} />
+        <Image source={{ uri: image }} style={{width: 200,height: 200,borderRadius:100,marginVertical:16,borderWidth:4,borderColor:'#654dff'}} />
 
         </TouchableOpacity>
          }
+         <View>
    
+   <Text>Email</Text>
+   <TextInput style={styles.input}  value={creation}
+       onChangeText={setName} placeholder='Full name'  editable = {false}/>
+ </View>
+ 
     <View>
+   
+      <Text>Date created</Text>
+      <TextInput style={styles.input}  value={creation}
+          onChangeText={setName} placeholder='Full name'  editable = {false}/>
+    </View>
+    <View>
+  
       <Text>Full Name</Text>
       <TextInput style={styles.input}  value={name}
           onChangeText={setName} placeholder='Full name' readonly/>
@@ -182,7 +197,7 @@ export const EditScreen = ({navigation}) => {
   
     <Btn  name="Save"  onPress={saveProfile}/>
     <Btn  name="Emailverification"  onPress={sendVerification}/>
-  </View>
+  </ScrollView>
 
   );
 };
@@ -244,7 +259,7 @@ export default function ProfileScreen({ navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.content}>
         <View style={{display:'flex',justifyContent: 'center', alignItems: 'center',gap:8}}>
-          <Image source={{uri: auth.currentUser?.photoURL}} style={{width: 140, height: 140,borderRadius:100}} />
+          <Image source={{uri: auth.currentUser?.photoURL}} style={{width: 140, height: 140,borderRadius:100,borderWidth:4,borderColor:'#654dff'}} />
           <Text style={styles.heading}>{auth.currentUser?.displayName} </Text>
           <Text>{auth.currentUser?.email}</Text>
           <Text></Text>
@@ -278,7 +293,7 @@ const styles = StyleSheet.create({
   content: {
    display:'flex',
    flexDirection:'column',
-    gap:40,
+    gap:10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical:48

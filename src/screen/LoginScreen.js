@@ -95,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
           clearButtonMode={'unless-editing'}
-          autoFocus
+          
         />
         <TextInput
           style={styles.input}
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     borderColor: '#a0a0a0',
     paddingHorizontal: 8,
     marginBottom: 10,
-    backgroundColor:'#fff9',
+    backgroundColor:'#fff',
     borderRadius:8
   },
   button: {
