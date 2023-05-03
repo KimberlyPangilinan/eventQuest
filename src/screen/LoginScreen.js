@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, Text, StyleSheet, TextInput, Pressable,Switch } from 'react-native';
-import { signInWithEmailAndPassword,sendSignInLinkToEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword,sendSignInLinkToEmail,sendPasswordResetEmail  } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const actionCodeSettings = {
@@ -81,6 +81,21 @@ const LoginScreen = ({ navigation }) => {
     }
   }, [email, password]);
 
+  const forgotPass = async()=>{
+    await sendPasswordResetEmail(auth, email)
+  .then(() => {
+    // Password reset email sent!
+    // ..
+    alert("email sent")
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert(error)
+    // ..
+  });
+  }
+
   return (
     <ScrollView keyboardDismissMode="interactive" contentContainerStyle={styles.container}>
       <View style={styles.welcome}>
@@ -117,7 +132,11 @@ const LoginScreen = ({ navigation }) => {
           />
           <Text style={{color: '#a0a0a0'}}>Show Password</Text>
         </View>
-
+        <Pressable onPress={forgotPass}>
+          <Text style={styles.link}>
+           <Text style={styles.linkHighlight}>Forgot password?</Text>
+          </Text>
+        </Pressable>
         <Pressable style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
