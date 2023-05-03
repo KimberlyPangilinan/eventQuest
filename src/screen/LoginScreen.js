@@ -95,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
           clearButtonMode={'unless-editing'}
-          
+          autoCorrect={false}
         />
         <TextInput
           style={styles.input}

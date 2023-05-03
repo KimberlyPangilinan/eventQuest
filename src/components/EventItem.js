@@ -122,7 +122,7 @@ const EventItem = ({ title, navigation }) => {
         );
         break;
       default:
-        q = query(collection(db, 'events'), limit(limitValue), where('when', '>=', startOfToday));
+        q = query(collection(db, 'events'), limit(limitValue), where('when', '>=', startOfToday), where('status', '==', "approved"));
         break;
     }
 
