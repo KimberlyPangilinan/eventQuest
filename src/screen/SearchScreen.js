@@ -73,7 +73,8 @@ const SearchScreen = ({ navigation }) => {
           title: item.title,
           email: item.email,
           when:item.when,
-          image:item.image
+          image:item.image,
+          
         });
       }}
     />

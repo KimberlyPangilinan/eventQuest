@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   disabledBtn:{
-    backgroundColor:'#e0dcfa'
+    backgroundColor:'#c5bcfa',
+
   }
 });
 

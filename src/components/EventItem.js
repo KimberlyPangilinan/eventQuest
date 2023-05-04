@@ -26,14 +26,17 @@ import { Btn } from './Btn';
 
 const Item = ({
   title,image,
-  id,
+  id, when,
   description,
   organization,
   email,
   onPress,
   backgroundColor,
   textColor,
-}) => (
+}) => {
+  const date = when.toDate();
+  const formattedDate = `${date.getFullYear()}/${date.getMonth() }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  return(
   <TouchableOpacity
     onPress={onPress}
     style={[styles.innerContainer, { backgroundColor }]}
@@ -51,12 +54,12 @@ const Item = ({
       </View>
       <View>
         <Text style={styles.itemText}>
-          {organization} | {email}
+        {formattedDate}
         </Text>
       </View>
     </View>
   </TouchableOpacity>
-);
+)};
 
 const Seperator = () => (
   <View style={{ borderBottomWidth: 0.5, borderColor: '#cbcad6' }} />
@@ -155,7 +158,7 @@ const EventItem = ({ title, navigation }) => {
       return(
 
       title == "Upcoming Events"
-          ? <Item title = {item.eventTitle} id={item.id} image={item.image}
+          ? <Item title = {item.eventTitle} id={item.id} when={item.when} image={item.image}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.eventID,
@@ -164,7 +167,7 @@ const EventItem = ({ title, navigation }) => {
                
           />:
       title=="Events Registered"
-      ? <Item title = {item.eventTitle} id={item.id} organization={item.organization} image={item.image}
+      ? <Item title = {item.eventTitle} id={item.id} image={item.image}  when={item.when}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.eventID,

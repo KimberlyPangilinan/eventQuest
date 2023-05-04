@@ -44,8 +44,7 @@ const CardList = ({ navigation }) => {
         const q = query(coll,  where('email', '==', auth.currentUser ? auth.currentUser.email : null));
 
         const snapshot = await getCountFromServer(q);
-        console.log('created count: ', snapshot.data().count);
-        console.log(auth.currentUser.email)
+
         setCreatedCount(snapshot.data().count);
       };
       const fetchUpcoming = async () => {
@@ -54,7 +53,7 @@ const CardList = ({ navigation }) => {
         where('when', '>=', new Date()));
 
         const snapshot = await getCountFromServer(q);
-        console.log('registered count: ', snapshot.data().count);
+    
 
         setUpcomingCount(snapshot.data().count);
       };
@@ -63,8 +62,7 @@ const CardList = ({ navigation }) => {
         const q = query(coll, where('email', '==', auth.currentUser ? auth.currentUser.email : null));
 
         const snapshot = await getCountFromServer(q);
-        console.log('registered count: ', snapshot.data().count);
-        console.log(auth.currentUser.email)
+
         setRegisteredCount(snapshot.data().count);
       };
       fetchUpcoming()
