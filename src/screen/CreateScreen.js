@@ -18,6 +18,7 @@ const CreateScreen = ({ navigation }) => {
   const [when, setWhen] = useState('');
   const [where, setWhere] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(false);
   const [image, setImage] = useState(null);
   const today = new Date();
   const startDate = getFormatedDate(today.setDate(today.getDate() + 1),"YYYY/MM/DD");
@@ -32,11 +33,21 @@ const CreateScreen = ({ navigation }) => {
   const minute = parseInt(dateParts[2].substr(6, 2), 10);
   const dateObj = new Date(year, month, day, hour, minute);
 
+
   function handleChangeStartDate(propDate) {
     setStartedDate(propDate);
   }
   const addEvent = async () => {
     try{
+      if(title === "" ||
+      description === "" ||
+      category === "" ||
+      organization === "" ||
+      where === ""){
+        alert("Oops! Please complete all fields to submit your event")
+      
+      }else{
+
        const docRef = await addDoc(collection(db, "events"), {
         title: title,
         description: description,
@@ -49,15 +60,15 @@ const CreateScreen = ({ navigation }) => {
         status:'pending',
         image:image
       });
-      alert("Event submission successful! Pending admin approval for posting.")
+      alert("Thanks for submitting your event! It's now pending for admin approval")
       navigation.replace('MyApp');
       setTitle("");
       setCategory("")
       setDescription("")
-      setOrganization("")
+      setOrganization("")}
     }
     catch (error) {
-      alert("Registration failed, you need to login first");
+      alert("Oops! Registration failed, you need to login first");
       navigation.replace('Login');
       setTitle("");
       setCategory("")
@@ -186,8 +197,8 @@ const CreateScreen = ({ navigation }) => {
             
         </View>
        
-        <Btn  name="Post" onPress={addEvent} />
-        
+        <Btn name="Post" onPress={addEvent}  />
+
     </ScrollView>
   </View>
   );

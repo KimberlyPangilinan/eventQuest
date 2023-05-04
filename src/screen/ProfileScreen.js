@@ -3,7 +3,7 @@
 import React, { useState,useEffect } from 'react';
 import {Image, Pressable,Button, TouchableOpacity,View,ScrollView, TextInput, Text,StyleSheet,Alert,ActivityIndicator } from 'react-native';
 import { auth,  } from "../config/firebase";
-import {  signOut,sendEmailVerification } from "firebase/auth";
+import {  signOut,sendEmailVerification,updatePassword,getASecureRandomPassword  } from "firebase/auth";
 import {Header} from '../components/Header'
 import { Btn } from '../components/Btn';
 import { collection, deleteDoc, addDoc, getDocs, where, query, doc, updateDoc, } from 'firebase/firestore';
@@ -14,8 +14,67 @@ import * as ImagePicker from 'expo-image-picker';
 import { storage } from '../config/firebase';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export const EditScreen = ({navigation}) => {
+export const AccountScreen=({navigation})=>{
+  const [email, setEmail] = useState('');
+  const [verified, setVerified] = useState('');
+  const [newPass, setNewPass] = useState('');
+  useEffect(() => {
+    // Fetch the user's profile data from Firestore and update the state
+    const fetchProfile = async () => {
+      const user = auth.currentUser;
 
+     
+      if (user !== "") {
+        setEmail(user.email)
+        setVerified(user.emailVerified)
+    
+        console.log(user)
+      }
+    };
+    fetchProfile();
+  
+  }, []);
+  const sendVerification = async()=>{
+    sendEmailVerification(auth.currentUser)
+  .then(() => {
+    // Email verification sent!
+    // ...
+    alert("Email verification sent")
+  });
+  }
+  const changePassword = async()=>{
+   
+const user = auth.currentUser;
+//const newPassword = getASecureRandomPassword();
+
+updatePassword(user, newPass).then(() => {
+  // Update successful.
+  alert("Password updated successfully")
+}).catch((error) => {
+  // An error ocurred
+  // ...
+  alert("Error updating your password ", error)
+});
+
+  }
+  return(
+    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.content}>
+    <Text>Email</Text>
+   <TextInput style={[styles.input, verified && styles.verifiedInput]}  value={email}
+        placeholder='Full name'  editable = {false}/>
+        <Text>New Password</Text>
+   <TextInput style={styles.input}  onChangeText={setNewPass}
+        placeholder='Enter new password'  editable = {true}  secureTextEntry/>
+        <Btn type="btnSecondary" name="Change Password"  onPress={changePassword}/>
+      <Btn type="btnSecondary" name="Email verification"  onPress={sendVerification}/>
+    </View>
+    </ScrollView>
+  )
+}
+export const EditScreen = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [verified, setVerified] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState();
   const [image, setImage] = useState('');
@@ -88,6 +147,8 @@ export const EditScreen = ({navigation}) => {
 
      
       if (user !== "") {
+        setEmail(user.email)
+        setVerified(user.emailVerified)
         setName(user.displayName);
         setPhone(user.phoneNumber);
         setImage(user.photoURL)
@@ -138,14 +199,6 @@ export const EditScreen = ({navigation}) => {
     }
   };
 
-  const sendVerification = async()=>{
-    sendEmailVerification(auth.currentUser)
-  .then(() => {
-    // Email verification sent!
-    // ...
-    alert("Email verification sent")
-  });
-  }
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
@@ -173,7 +226,7 @@ export const EditScreen = ({navigation}) => {
          <View>
    
    <Text>Email</Text>
-   <TextInput style={styles.input}  value={creation}
+   <TextInput style={[styles.input, verified && styles.verifiedInput]}  value={email}
        onChangeText={setName} placeholder='Full name'  editable = {false}/>
  </View>
  
@@ -196,7 +249,6 @@ export const EditScreen = ({navigation}) => {
     </View>
   
     <Btn  name="Save"  onPress={saveProfile}/>
-    <Btn  name="Emailverification"  onPress={sendVerification}/>
   </ScrollView>
 
   );
@@ -242,6 +294,7 @@ export default function ProfileScreen({ navigation }) {
     await AsyncStorage.removeItem('userEmail');
     await AsyncStorage.removeItem('userPassword');
   }
+  
   const [isLoggedIn,setIsLoggedIn] = useState('');
 
   useEffect(() => {
@@ -269,9 +322,13 @@ export default function ProfileScreen({ navigation }) {
               navigation.navigate('Personal Information');
             }} />
         </View>
-        <View style={{flex:1,gap:16}}>
-          <Btn type="btnSecondary" name="Account Settings" />
-          <Btn type="btnSecondary" name="Terms and Condition" />
+        <View style={{flex:1,gap:16,marginTop:16}}>
+          
+          <Btn type="btnSecondary" name="Account Settings"  onPress={() => {
+              navigation.navigate('Account Settings');
+            }}  />
+          <Btn type="btnSecondary"  name="Terms and Condition" />
+
           <Btn type="btnSecondary" name="Logout" onPress={handleSignOut}/>
         </View>
 
@@ -321,6 +378,10 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     textAlign:'left',
     fontSize:20
+  },
+  verifiedInput:{
+    borderColor:'green',
+    backgroundColor:'#ebfbea'
   }
 
 });

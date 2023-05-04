@@ -74,7 +74,7 @@ export default function DetailsScreen({ route, navigation }) {
         setTitle(data.title);
         setEmail(data.email);
         setOrganization(data.organization)
-    
+        setStatus(data.status);
         setCategory(data.category)
         const timestamp = data.when;
         setTimestamp(data.when);
@@ -158,6 +158,7 @@ export default function DetailsScreen({ route, navigation }) {
       <Text>by: {email}{organization}</Text>
       <Text>Event ID: {itemId}</Text>
       <Text> {when}</Text>
+      <Text>{status}</Text>
       <Text>Description: {JSON.stringify(description)}</Text>
       {page==="Events Created"?<>
 
@@ -168,7 +169,7 @@ export default function DetailsScreen({ route, navigation }) {
                 organization:organization,
                 startedDate:when,
                 description:description,
-             
+                status:status,
                 category:category,
                 month1:month,
                 day1:day,

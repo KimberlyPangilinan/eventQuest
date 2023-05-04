@@ -5,7 +5,7 @@ export const Btn = ({type,name,onPress,disabled}) => {
   return (
     <View> 
       <Pressable disabled={disabled}
-        style={type==="btnSecondary"? styles.btnSecondary: styles.button}
+        style={[type==="btnSecondary"? styles.btnSecondary: styles.button, disabled==true && styles.disabledBtn]}
         onPress={onPress}
         >
         <Text style={type==="btnSecondary"? styles.buttonTextSecondary: styles.buttonText}>
@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     textAlign:'center'
   },
+  disabledBtn:{
+    backgroundColor:'#e0dcfa'
+  }
 });
 
 

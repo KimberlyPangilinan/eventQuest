@@ -14,6 +14,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const EditEventScreen = ({ navigation,route }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [status, setStatus] = useState('');
   const [category, setCategory] = useState('');
   const [organization, setOrganization] = useState('');
   const [when, setWhen] = useState('');
@@ -55,7 +56,7 @@ const EditEventScreen = ({ navigation,route }) => {
         setOrganization(data.organization)
         setWhere(data.where)
         setCategory(data.category)
-   
+        setStatus(data.status)
      
 
       } else {
@@ -211,7 +212,12 @@ const EditEventScreen = ({ navigation,route }) => {
         <TextInput style={styles.input}  value={organization}
             onChangeText={setOrganization} placeholder='Organization hosting the event' />
         </View>
-
+        <View>
+        <Text>Status</Text>
+        <TextInput style={styles.input}  value={status}
+            onChangeText={setStatus} placeholder='Organization hosting the event' editable={status==="pending"? false:true}/>
+        </View>
+       
   
         <View>
         <Text>When</Text>

@@ -1,7 +1,7 @@
 
 import LoginScreen from './src/screen/LoginScreen';
 import HomeScreen from './src/screen/HomeScreen';
-import ProfileScreen, { EditScreen } from './src/screen/ProfileScreen';
+import ProfileScreen, { AccountScreen, EditScreen } from './src/screen/ProfileScreen';
 import React,{useState,useEffect} from 'react';
 import {  ScrollView,SafeAreaView,RefreshControl,Button, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -135,6 +135,7 @@ function App() {
             <Stack.Screen name="Events Registered" component={ListScreen} initialParams={{ title: "Events Registered" }} />
             <Stack.Screen name="Events Created" component={ListScreen} initialParams={{ title: "Events Created" }} />
             <Stack.Screen name="Personal Information" component={EditScreen} />
+            <Stack.Screen name="Account Settings" component={AccountScreen} />
             <Stack.Screen name="Search Screen " component={SearchScreen} />
             <Stack.Screen name="Edit Event" component={EditEventScreen} />
             <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }} />
