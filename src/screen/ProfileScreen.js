@@ -39,7 +39,7 @@ export const AccountScreen=({navigation})=>{
   .then(() => {
     // Email verification sent!
     // ...
-    alert("Email verification sent")
+    alert(`Email verification sent to ${email}. Please follow the instructions given`)
   });
   }
   const changePassword = async()=>{

@@ -86,7 +86,7 @@ const LoginScreen = ({ navigation }) => {
   .then(() => {
     // Password reset email sent!
     // ..
-    alert("email sent")
+    alert(`Password reset sent to your ${email}`)
   })
   .catch((error) => {
     const errorCode = error.code;

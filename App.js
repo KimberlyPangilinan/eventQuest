@@ -139,8 +139,9 @@ function App() {
             <Stack.Screen name="Account Settings" component={AccountScreen} />
             <Stack.Screen name="Search Screen " component={SearchScreen} />
             <Stack.Screen name="Edit Event" component={EditEventScreen} />
-            <Stack.Screen name="Terms and Condition" component={Terms} />
+
             <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }} />
+            <Stack.Screen name="Terms and Condition" component={Terms} />
           </Stack.Navigator>
     </NavigationContainer>
   );

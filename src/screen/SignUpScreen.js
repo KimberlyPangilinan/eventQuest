@@ -58,7 +58,7 @@ const SignUpScreen = ({navigation}) => {
           returnKeyType='go'
           autoCorrect={false}
         />
-          <View style={{display:"flex",flexDirection:"row",gap:8}}>
+         <View style={{display:"flex",flexDirection:"row",gap:8,justifyItems:'center',alignItems:'center'}}>
           <Switch
             trackColor={{false: '#767577', true: '#81b0ff'}}
             thumbColor={isShown ? '#f5dd4b' : '#f4f3f4'}
@@ -81,8 +81,10 @@ const SignUpScreen = ({navigation}) => {
           <Text style={styles.link}>Already have an account? <Text style={styles.linkHighlight}>Login</Text></Text>
         </Pressable>
         <Pressable 
-          onPress={() => navigation.navigate('Terms and Conditions')}
-          > <Text style={{textAlign:'center',color:'#858585'}}>By signing up you agree with our <b>Terms and Conditions</b></Text></Pressable>
+          onPress={() => navigation.navigate('Terms and Condition')}
+          >
+          <Text style={styles.link}>By signing up you agree with our <Text style={{fontWeight:'bold'}}>Terms and Condition </Text></Text>
+        </Pressable>
        
       </View>
     </ScrollView>
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     borderColor: '#a0a0a0',
     paddingHorizontal: 8,
     marginBottom: 10,
-    backgroundColor:'#fff9',
+    backgroundColor:'#fff',
     borderRadius:8
   
   },
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   link:{
-    margin:32,
+    margin:16,
   },
   linkHighlight:{
     color:'blue'
