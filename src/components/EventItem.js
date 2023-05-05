@@ -29,13 +29,14 @@ const Item = ({
   id, when,
   description,
   organization,
+  category,
   email,
   onPress,
   backgroundColor,
   textColor,
 }) => {
   const date = when.toDate();
-  const formattedDate = `${date.getFullYear()}/${date.getMonth() }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  const formattedDate = `${date.getFullYear()}/${date.getMonth() }/${date.getDate()} `;
   return(
   <TouchableOpacity
     onPress={onPress}
@@ -51,10 +52,11 @@ const Item = ({
     <View style={styles.itemInfo}>
       <View style={styles.itemHeader}>
         <Text style={styles.itemTitle}>{title}</Text>
+        <Text>{email}{email ? '|' : null} {formattedDate}</Text>
       </View>
       <View>
         <Text style={styles.itemText}>
-        {formattedDate}
+       {category}
         </Text>
       </View>
     </View>
@@ -245,12 +247,12 @@ const styles = StyleSheet.create({
     },
   itemText: {
     color: 'black',
-    fontSize: 16,
+    fontSize: 12,
     maxWidth:'64%'
     
   },
   itemHeader:{
-    flex:1
+    flex:1,
   },
   itemMenu: {
     color: 'black',
