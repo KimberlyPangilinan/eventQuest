@@ -122,7 +122,7 @@ export default function DetailsScreen({ route, navigation }) {
   
      
     }}
-  const registerEvent = async (navigation) => {
+  const registerEvent = async ({navigation}) => {
     try {
       if (!auth.currentUser) {
         throw new Error("Registration failed, you need to login first");
@@ -142,7 +142,7 @@ export default function DetailsScreen({ route, navigation }) {
       setIsRegistered("Registered");
       setIsDisabled(true);
       alert("You are now registered");
-      navigation.navigate("My App")
+      navigation.replace('MyApp');
     } catch (error) {
   
       alert(error.message);
