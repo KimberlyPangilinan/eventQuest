@@ -19,6 +19,7 @@ export default function DetailsScreen({ route, navigation }) {
   const [category, setCategory] = React.useState("");
   const [organization, setOrganization] = React.useState("");
   const [when, setWhen] = React.useState("");
+  const [where1, setWhere1] = React.useState("");
   const [timestamp, setTimestamp] = React.useState("");
   const [image, setImage] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
@@ -78,6 +79,7 @@ export default function DetailsScreen({ route, navigation }) {
         setStatus(data.status);
         setCategory(data.category)
         setEventStatus(data.eventStatus)
+        setWhere1(data.where)
         const timestamp = data.when;
         setTimestamp(data.when);
         const date = timestamp.toDate();
@@ -159,7 +161,7 @@ export default function DetailsScreen({ route, navigation }) {
       <Text style={styles.heading}>{title}</Text>
       <Text>by: {email}{organization}</Text>
       <Text>Event ID: {itemId}</Text>
-      <Text> {when}</Text>
+      <Text> {when} | {where1}</Text>
       <Text>{page=="Events Created"? status +' |' :null} {eventStatus}</Text>
       <Text>Description: {JSON.stringify(description)}</Text>
       {page === "Events Created" && (
