@@ -83,7 +83,7 @@ const SearchScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <SearchBar value={searchText} onChangeText={handleSearch} />
-      <FlatList data={filteredEvents} renderItem={renderItem} ItemSeparatorComponent={Seperator} keyExtractor={(item) => item.id} />
+      <FlatList data={filteredEvents} renderItem={renderItem} ItemSeparatorComponent={Seperator} keyExtractor={(item) => item.id}   showsVerticalScrollIndicator={false}/>
     </View>
   );
 };

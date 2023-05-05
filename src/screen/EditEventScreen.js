@@ -11,10 +11,12 @@ import * as ImagePicker from 'expo-image-picker';
 import { getFormatedDate } from "react-native-modern-datepicker";
 import { storage } from '../config/firebase';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {SelectList, MultipleSelectList }from 'react-native-dropdown-select-list'
 const EditEventScreen = ({ navigation,route }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('');
+  const [eventStatus, setEventStatus] = useState('');
   const [category, setCategory] = useState('');
   const [organization, setOrganization] = useState('');
   const [when, setWhen] = useState('');
@@ -41,7 +43,27 @@ const EditEventScreen = ({ navigation,route }) => {
   const { itemId } = route.params;
   const { imagePrev } = route.params;
   const { startedDate } = route.params;
-
+  const [selected, setSelected] = React.useState("");
+  const [categories, setCategories] = React.useState([]);
+  
+  const data = [
+    {key:'Artificial Intelligence', value:'Artificial Intelligence'},
+    {key:'Application Development', value:'Application Development'},
+    {key:'Career Talks', value:'Career Talks'},
+    {key:'Cybersecurity', value:'Cybersecurity'},
+    {key:'Data Science', value:'Data Science'},
+    {key:'IT Automation', value:'IT Automation'},
+    {key:'Web Development', value:'Web Development'},
+  ]
+  const statusData = [
+    {key:'Registration Open', value:'Registration Open'},
+    {key:'Registration Closed', value:'Registration Closed'},
+    {key:'Event in Progress', value:'Event in Progress'},
+    {key:'Certificates Issued', value:'Certificates Issued'},
+    {key:'Event Completed', value:'Event Completed'},
+    
+   
+  ]
   React.useEffect(() => {
    
     const fetchEvent = async () => {
@@ -57,7 +79,7 @@ const EditEventScreen = ({ navigation,route }) => {
         setWhere(data.where)
         setCategory(data.category)
         setStatus(data.status)
-     
+        setEventStatus(data.eventStatus)
 
       } else {
         console.log("No such document!");
@@ -79,7 +101,7 @@ const EditEventScreen = ({ navigation,route }) => {
         category:category,
         when: dateObj,
         where: where,
- 
+        eventStatus:eventStatus,
         email:auth.currentUser?.email,
 
         image:imagePrev? imagePrev: image
@@ -202,20 +224,28 @@ const EditEventScreen = ({ navigation,route }) => {
         <TextInput style={styles.input}  value={description}
             onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} />
         </View>
-        <View>
-        <Text>Category</Text>
-        <TextInput style={styles.input}  value={category}
-            onChangeText={setCategory} placeholder='Ex: Cybersecurity' />
+        <View style={{display: 'flex', flex: 1,width:321}}>
+          <Text>Category</Text>
+          <View style={{flex: 1}}>
+            <SelectList setSelected={setCategory}  data={data}  placeholder={category} value={category} />
+          </View>
         </View>
         <View>
         <Text>Organization</Text>
         <TextInput style={styles.input}  value={organization}
             onChangeText={setOrganization} placeholder='Organization hosting the event' />
         </View>
-        <View>
-        <Text>Status</Text>
+        <View style={{display: 'flex', flex: 1,width:321}}>
+        <Text>Other Details</Text>
+        {status==="pending"? 
         <TextInput style={styles.input}  value={status}
-            onChangeText={setStatus} placeholder='Organization hosting the event' editable={status==="pending"? false:true}/>
+            onChangeText={setStatus} placeholder='Organization hosting the event' editable={status==="pending"? false:true}/>:
+            <View style={{flex: 1}}>
+              <SelectList setSelected={setEventStatus}  data={statusData}  placeholder={eventStatus} value={eventStatus}/>
+              </View>
+              }
+             
+
         </View>
        
   
@@ -263,7 +293,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#a0a0a0',
-    paddingHorizontal: 8,
+    paddingHorizontal: 20,
     marginBottom: 10,
     backgroundColor:'#fff9',
     borderRadius:8

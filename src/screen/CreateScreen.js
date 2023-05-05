@@ -10,6 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getFormatedDate } from "react-native-modern-datepicker";
 import { storage } from '../config/firebase';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {SelectList, MultipleSelectList }from 'react-native-dropdown-select-list'
 const CreateScreen = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -32,6 +33,18 @@ const CreateScreen = ({ navigation }) => {
   const hour = parseInt(dateParts[2].substr(3, 2), 10);
   const minute = parseInt(dateParts[2].substr(6, 2), 10);
   const dateObj = new Date(year, month, day, hour, minute);
+  const [selected, setSelected] = React.useState("");
+  const [categories, setCategories] = React.useState([]);
+  
+  const data = [
+    {key:'Artificial Intelligence', value:'Artificial Intelligence'},
+    {key:'Application Development', value:'Application Development'},
+    {key:'Career Talks', value:'Career Talks'},
+    {key:'Cybersecurit', value:'Cybersecurity'},
+    {key:'Data Science', value:'Data Science'},
+    {key:'IT Automation', value:'IT Automation'},
+    {key:'Web Development', value:'Web Development'},
+  ]
 
 
   function handleChangeStartDate(propDate) {
@@ -169,18 +182,20 @@ const CreateScreen = ({ navigation }) => {
         <TextInput style={styles.input}  value={description}
             onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} />
         </View>
-        <View>
-        <Text>Category</Text>
-        <TextInput style={styles.input}  value={category}
-            onChangeText={setCategory} placeholder='Ex: Cybersecurity' />
+        <View style={{display: 'flex', flex: 1,width:321}}>
+          <Text>Category</Text>
+          <View style={{flex: 1}}>
+            <SelectList setSelected={setCategory} data={data} />
+          </View>
         </View>
+
         <View>
         <Text>Organization</Text>
         <TextInput style={styles.input}  value={organization}
             onChangeText={setOrganization} placeholder='Organization hosting the event' />
         </View>
 
-  
+        
         <View>
         <Text>When</Text>
          <Picker mimimumDate={startDate} selected={startedDate} 
