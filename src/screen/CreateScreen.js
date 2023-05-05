@@ -11,6 +11,7 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import { storage } from '../config/firebase';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {SelectList, MultipleSelectList }from 'react-native-dropdown-select-list'
+
 const CreateScreen = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -22,9 +23,11 @@ const CreateScreen = ({ navigation }) => {
   const [disabledButton, setDisabledButton] = useState(false);
   const [image, setImage] = useState(null);
   const today = new Date();
+
+
   const startDate = getFormatedDate(today.setDate(today.getDate() + 1),"YYYY/MM/DD");
-  const [selectedStartDate, setSelectedStartDate] = useState("2023/03/25 00:00");
-  const [startedDate, setStartedDate] = useState("//");
+  const [selectedStartDate, setSelectedStartDate] = useState(`${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()-1} 00:00`);
+  const [startedDate, setStartedDate] = useState(`${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()-1} `);
   const dateString = selectedStartDate;
   const dateParts = dateString.split("/");
   const year = parseInt(dateParts[0], 10);
@@ -35,12 +38,29 @@ const CreateScreen = ({ navigation }) => {
   const dateObj = new Date(year, month, day, hour, minute);
   const [selected, setSelected] = React.useState("");
   const [categories, setCategories] = React.useState([]);
+  const [email, setEmail] = useState('');
+  const [verified, setVerified] = useState('');
+  useEffect(() => {
+    // Fetch the user's profile data from Firestore and update the state
+    const fetchProfile = async () => {
+      const user = auth.currentUser;
+
+     
+      if (user !== "") {
+        setEmail(user.email)
+        setVerified(user.emailVerified)
+    
+        console.log(user)
+      }
+    };
+    fetchProfile();
   
+  }, []);
   const data = [
     {key:'Artificial Intelligence', value:'Artificial Intelligence'},
     {key:'Application Development', value:'Application Development'},
     {key:'Career Talks', value:'Career Talks'},
-    {key:'Cybersecurit', value:'Cybersecurity'},
+    {key:'Cybersecurity', value:'Cybersecurity'},
     {key:'Data Science', value:'Data Science'},
     {key:'IT Automation', value:'IT Automation'},
     {key:'Web Development', value:'Web Development'},
@@ -52,7 +72,11 @@ const CreateScreen = ({ navigation }) => {
   }
   const addEvent = async () => {
     try{
-      if(title === "" ||
+
+      if(!verified){
+        alert("Oops! Please verify your email first")
+      }
+      else if(title === "" ||
       description === "" ||
       category === "" ||
       organization === "" ||
@@ -175,12 +199,12 @@ const CreateScreen = ({ navigation }) => {
         <View>
         <Text>Event/Webinar Title</Text>
         <TextInput style={styles.input}  value={title}
-            onChangeText={setTitle} placeholder='Event Title' />
+            onChangeText={setTitle} placeholder='Event Title' maxLength={50} />
         </View>
         <View>
         <Text>Description</Text>
         <TextInput style={styles.input}  value={description}
-            onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} />
+            onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} maxLength={200} />
         </View>
         <View style={{display: 'flex', flex: 1,width:321}}>
           <Text>Category</Text>

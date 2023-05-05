@@ -36,7 +36,7 @@ const Item = ({
   textColor,
 }) => {
   const date = when.toDate();
-  const formattedDate = `${date.getFullYear()}/${date.getMonth() }/${date.getDate()} `;
+  const formattedDate = `${date.getFullYear()}/${date.getMonth()+1 }/${date.getDate()} `;
   return(
   <TouchableOpacity
     onPress={onPress}

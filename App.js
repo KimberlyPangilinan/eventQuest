@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth,  } from "./src/config/firebase";
 import { signInWithCustomToken,signInWithEmailAndPassword } from 'firebase/auth';
 import EditEventScreen from './src/screen/EditEventScreen';
+import Terms from './src/screen/Terms';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -138,6 +139,7 @@ function App() {
             <Stack.Screen name="Account Settings" component={AccountScreen} />
             <Stack.Screen name="Search Screen " component={SearchScreen} />
             <Stack.Screen name="Edit Event" component={EditEventScreen} />
+            <Stack.Screen name="Terms and Condition" component={Terms} />
             <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerStyle: { backgroundColor: '#654dff' }, headerTintColor: '#fff' }} />
           </Stack.Navigator>
     </NavigationContainer>

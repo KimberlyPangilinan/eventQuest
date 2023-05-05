@@ -80,6 +80,10 @@ const SignUpScreen = ({navigation}) => {
           >
           <Text style={styles.link}>Already have an account? <Text style={styles.linkHighlight}>Login</Text></Text>
         </Pressable>
+        <Pressable 
+          onPress={() => navigation.navigate('Terms and Conditions')}
+          > <Text style={{textAlign:'center',color:'#858585'}}>By signing up you agree with our <b>Terms and Conditions</b></Text></Pressable>
+       
       </View>
     </ScrollView>
   );
@@ -139,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#654dff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:80
+    marginTop:40
   },
   buttonText: {
     color: '#fff',

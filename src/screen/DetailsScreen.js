@@ -81,9 +81,9 @@ export default function DetailsScreen({ route, navigation }) {
         const timestamp = data.when;
         setTimestamp(data.when);
         const date = timestamp.toDate();
-        const formattedDate = `${date.getFullYear()}/${date.getMonth() }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        const formattedDate = `${date.getFullYear()}/${date.getMonth() +1 }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
         setWhen(formattedDate); 
-        setMonth(date.getMonth())
+        setMonth(date.getMonth()+1)
         setDay(date.getDate())
         setYear(date.getFullYear())
         setImage(data.image);
@@ -140,6 +140,7 @@ export default function DetailsScreen({ route, navigation }) {
       setIsRegistered("Registered");
       setIsDisabled(true);
       alert("You are now registered");
+      navigation.navigate("My App")
     } catch (error) {
   
       alert(error.message);

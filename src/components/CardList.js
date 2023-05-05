@@ -68,7 +68,9 @@ const CardList = ({ navigation }) => {
       fetchUpcoming()
       fetchCreated();
       fetchRegistered();
-
+      setRegisteredCount(registeredCount);
+      setUpcomingCount(upcomingCount);
+      setCreatedCount(createdCount);
     
     }catch(error){
         console.log(error)

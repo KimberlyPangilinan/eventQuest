@@ -59,15 +59,25 @@ updatePassword(user, newPass).then(() => {
   }
   return(
     <ScrollView contentContainerStyle={styles.container}>
-    <View style={styles.content}>
-    <Text>Email</Text>
-   <TextInput style={[styles.input, verified && styles.verifiedInput]}  value={email}
-        placeholder='Full name'  editable = {false}/>
-        <Text>New Password</Text>
-   <TextInput style={styles.input}  onChangeText={setNewPass}
-        placeholder='Enter new password'  editable = {true}  secureTextEntry/>
+    <View style={styles.accountContent}>
+    <View style={{display:'flex',gap:8}}>        
+        <Text style={styles.heading}>PASSWORD CHANGE</Text>
+        <Text>Email</Text>
+        <TextInput style={[styles.input, verified && styles.verifiedInput]}  value={email}
+              placeholder='Full name'  editable = {false}/>
+              <Text>New Password</Text>
+        <TextInput style={styles.input}  onChangeText={setNewPass}
+              placeholder='Enter new password'  editable = {true}  secureTextEntry/>
         <Btn type="btnSecondary" name="Change Password"  onPress={changePassword}/>
-      <Btn type="btnSecondary" name="Email verification"  onPress={sendVerification}/>
+        </View>
+    <View style={{display:'flex',gap:8}}> 
+        <Text style={styles.heading}>EMAIL VERIFICATION</Text>
+        <Text>To help protect the security of your account, we require email verification. Simply click on the verification link we've sent to your email address to confirm that you are the owner of the account.
+           Once your email is verified, you will have access to all of the features in our app, including the ability to post and submit events. </Text>
+        <Btn type="btnSecondary" name="Verify Email"  onPress={sendVerification}/>
+    </View>
+
+       
     </View>
     </ScrollView>
   )
@@ -327,7 +337,9 @@ export default function ProfileScreen({ navigation }) {
           <Btn type="btnSecondary" name="Account Settings"  onPress={() => {
               navigation.navigate('Account Settings');
             }}  />
-          <Btn type="btnSecondary"  name="Terms and Condition" />
+          <Btn type="btnSecondary"  onPress={() => {
+              navigation.navigate('Terms and Condition');
+            }} name="Terms and Condition" />
 
           <Btn type="btnSecondary" name="Logout" onPress={handleSignOut}/>
         </View>
@@ -353,8 +365,18 @@ const styles = StyleSheet.create({
     gap:10,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical:48
+    padding:32,
+    
   },
+  accountContent: {
+    display:'flex',
+    flexDirection:'column',
+     gap:32,
+     justifyContent: 'center',
+     alignItems: 'center',
+     padding:32,
+     
+   },
   content1: {
     flex: 1,
     gap:16,

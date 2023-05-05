@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#654dff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:80
+    marginTop:40
   },
   buttonText: {
     color: '#fff',
