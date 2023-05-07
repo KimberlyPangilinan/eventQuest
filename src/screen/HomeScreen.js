@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header type="xl" title="Home Screen" subtitle="Welcome to EventQuest!" />
+      <Header type="xl" title="Home Screen" subtitle="Welcome to EventQuest!" message="You must sign in first to participate in events registration" />
       <View style={styles.content}>
         
           <View>

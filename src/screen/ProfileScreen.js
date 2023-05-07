@@ -64,7 +64,7 @@ updatePassword(user, newPass).then(() => {
         <Text style={styles.heading}>PASSWORD CHANGE</Text>
         <Text>Email</Text>
         <TextInput style={[styles.input, verified && styles.verifiedInput]}  value={email}
-              placeholder='Full name'  editable = {false}/>
+              placeholder='Email'  editable = {false}/>
               <Text>New Password</Text>
         <TextInput style={styles.input}  onChangeText={setNewPass}
               placeholder='Enter new password'  editable = {true}  secureTextEntry/>
@@ -73,7 +73,10 @@ updatePassword(user, newPass).then(() => {
     <View style={{display:'flex',gap:8}}> 
         <Text style={styles.heading}>EMAIL VERIFICATION</Text>
         <Text>To help protect the security of your account, we require email verification. Simply click on the verification link we've sent to your email address to confirm that you are the owner of the account.
-           Once your email is verified, you will have access to all of the features in our app, including the ability to post and submit events. </Text>
+           Once your email is verified, you will have access to all of the features in our app, including the ability to post and submit events. 
+           
+          </Text>
+           <Text> You may want to re-login for the changes to take effect</Text>
         <Btn type="btnSecondary" name="Verify Email"  onPress={sendVerification}/>
     </View>
 
@@ -237,14 +240,14 @@ export const EditScreen = ({navigation}) => {
    
    <Text>Email</Text>
    <TextInput style={[styles.input, verified && styles.verifiedInput]}  value={email}
-       onChangeText={setName} placeholder='Full name'  editable = {false}/>
+       onChangeText={setName} placeholder='Email'  editable = {false}/>
  </View>
  
     <View>
    
       <Text>Date created</Text>
       <TextInput style={styles.input}  value={creation}
-          onChangeText={setName} placeholder='Full name'  editable = {false}/>
+          onChangeText={setName} placeholder='Date Created'  editable = {false}/>
     </View>
     <View>
   

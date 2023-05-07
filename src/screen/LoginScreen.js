@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, Text, StyleSheet, TextInput, Pressable,Switch } from 'react-native';
-import { signInWithEmailAndPassword,sendSignInLinkToEmail,sendPasswordResetEmail  } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword,sendSignInLinkToEmail,sendPasswordResetEmail,signInWithRedirect  } from 'firebase/auth';
+import { auth,provider } from '../config/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const actionCodeSettings = {
   // URL you want to redirect back to. The domain (www.example.com) for this
@@ -16,6 +16,7 @@ const actionCodeSettings = {
   },
  
 };
+
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,16 +32,47 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('isLogged', 'true');
       } else {
         setIsLogged(false);
-        await AsyncStorage.removeItem('isLogged');
-        await AsyncStorage.removeItem('userToken', token);
-        await AsyncStorage.removeItem('userEmail', user.email);
-        await AsyncStorage.removeItem('userPassword', password);
+      //  await AsyncStorage.removeItem('isLogged');
+
+   //     await AsyncStorage.removeItem('userEmail', user.email);
+      //  await AsyncStorage.removeItem('userPassword', password);
       }
     });
 
     return unsubscribe;
   }, []);
 
+  
+  const signUpWithGoogle = async () => {
+    
+    try {
+      signInWithRedirect(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        console.log(token);
+        console.log(user)
+        // ...
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+       alert(error)
+       console.log(error.code)
+        // ...
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
   const emailSignIn = useCallback(async () => {
     if (!email || email.trim() === '') {
       // handle error: email is blank or undefined
@@ -63,17 +95,15 @@ const LoginScreen = ({ navigation }) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       // ...
-      alert(error)});
+      alert(error, errorCode)});
   }, [auth, email, actionCodeSettings]);
   const handleSignIn = useCallback(async () => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       console.log('Logged with:', user.email);
 
-      const token = await user.getIdToken(auth, true);
 
-      await AsyncStorage.setItem('userToken', token);
-      await AsyncStorage.setItem('userEmail', user.email);
+   //   await AsyncStorage.setItem('userEmail', user.email);
       await AsyncStorage.setItem('userPassword', password);
       console.log(user.email);
     } catch (error) {
@@ -99,7 +129,10 @@ const LoginScreen = ({ navigation }) => {
   return (
     <ScrollView keyboardDismissMode="interactive" contentContainerStyle={styles.container}>
       <View style={styles.welcome}>
-        <Text style={styles.title}>EventQuest</Text>
+        
+       <Pressable onPress={() => {
+              navigation.navigate('MyApp');
+            }} ><Text style={styles.title}>EventQuest</Text></Pressable> 
         <Text style={styles.subtitle}>Please login to continue.</Text>
       </View>
       <View style={styles.form}>
@@ -122,6 +155,12 @@ const LoginScreen = ({ navigation }) => {
           returnKeyType='go'
           autoCorrect={false}
         />
+      
+        <Pressable onPress={forgotPass}>
+          <Text style={styles.link}>
+           <Text style={styles.linkHighlight}>Forgot password?</Text>
+          </Text>
+        </Pressable>
         <View style={{display:"flex",flexDirection:"row",gap:8,justifyItems:'center',alignItems:'center'}}>
           <Switch
             trackColor={{false: '#767577', true: '#81b0ff'}}
@@ -130,13 +169,10 @@ const LoginScreen = ({ navigation }) => {
             onValueChange={()=>setIsShown(!isShown)}
             value={isShown}
           />
+          
           <Text style={{color: '#a0a0a0'}}>Show Password</Text>
         </View>
-        <Pressable onPress={forgotPass}>
-          <Text style={styles.link}>
-           <Text style={styles.linkHighlight}>Forgot password?</Text>
-          </Text>
-        </Pressable>
+
         <Pressable style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
@@ -144,6 +180,9 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.link}>
             Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text>
           </Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={signUpWithGoogle}>
+          <Text style={styles.buttonText}>Google</Text>
         </Pressable>
       </View>
     </ScrollView>
@@ -170,7 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    padding:'10%'
+    padding:'10%',
   },
   title: {
     fontSize: 32,

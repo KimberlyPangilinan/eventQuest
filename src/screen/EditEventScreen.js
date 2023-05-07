@@ -101,7 +101,7 @@ const EditEventScreen = ({ navigation,route }) => {
         category:category,
         when: dateObj,
         where: where,
-        eventStatus:eventStatus,
+        eventStatus:eventStatus? eventStatus: '',
         email:auth.currentUser?.email,
 
         image:imagePrev? imagePrev: image
@@ -113,7 +113,7 @@ const EditEventScreen = ({ navigation,route }) => {
 
     }
     catch (error) {
-      alert("You cannot update an event past due");
+      alert(`You cannot update an event past due ${error}`);
   
      
     }}

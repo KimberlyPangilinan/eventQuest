@@ -72,9 +72,13 @@ const CreateScreen = ({ navigation }) => {
   }
   const addEvent = async () => {
     try{
-
-      if(!verified){
+      if(email==""){
+        alert("Oops! You need to login first");
+        navigation.replace('Login');
+      }
+      else if(!verified){
         alert("Oops! Please verify your email first")
+        navigation.replace('Account Settings');
       }
       else if(title === "" ||
       description === "" ||
@@ -105,7 +109,7 @@ const CreateScreen = ({ navigation }) => {
       setOrganization("")}
     }
     catch (error) {
-      alert("Oops! Registration failed, you need to login first");
+      alert("Oops! You need to login first");
       navigation.replace('Login');
       setTitle("");
       setCategory("")

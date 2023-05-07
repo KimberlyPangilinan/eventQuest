@@ -64,6 +64,7 @@ export default function DetailsScreen({ route, navigation }) {
         setIsRegistered("Register");
         setIsDisabled(false);
       }
+     
     };
  
     const fetchEvent = async () => {
@@ -96,6 +97,10 @@ export default function DetailsScreen({ route, navigation }) {
     fetchProfile();
     checkRegistration();
     fetchEvent();
+    setInterval(() => {
+      setIsLoading(false)
+
+    }, 1000);
 
   }, []);
 
@@ -183,7 +188,7 @@ export default function DetailsScreen({ route, navigation }) {
                 description,
                 status,
                 category,
-                month1: month,
+                month1: month-1,
                 day1: day,
                 year1: year,
               })
