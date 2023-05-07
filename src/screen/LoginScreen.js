@@ -32,10 +32,10 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('isLogged', 'true');
       } else {
         setIsLogged(false);
-      //  await AsyncStorage.removeItem('isLogged');
-
-   //     await AsyncStorage.removeItem('userEmail', user.email);
-      //  await AsyncStorage.removeItem('userPassword', password);
+        await AsyncStorage.removeItem('isLogged');
+        await AsyncStorage.removeItem('userToken', token);
+        await AsyncStorage.removeItem('userEmail', user.email);
+        await AsyncStorage.removeItem('userPassword', password);
       }
     });
 
@@ -65,12 +65,10 @@ const LoginScreen = ({ navigation }) => {
         const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-       alert(error)
-       console.log(error.code)
         // ...
       });
     } catch (error) {
-      alert(error);
+      alert(error.message);
     }
   };
   const emailSignIn = useCallback(async () => {
@@ -95,15 +93,17 @@ const LoginScreen = ({ navigation }) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       // ...
-      alert(error, errorCode)});
+      alert(error)});
   }, [auth, email, actionCodeSettings]);
   const handleSignIn = useCallback(async () => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       console.log('Logged with:', user.email);
 
+      const token = await user.getIdToken(auth, true);
 
-   //   await AsyncStorage.setItem('userEmail', user.email);
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('userEmail', user.email);
       await AsyncStorage.setItem('userPassword', password);
       console.log(user.email);
     } catch (error) {
