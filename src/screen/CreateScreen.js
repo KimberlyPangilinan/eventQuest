@@ -25,7 +25,7 @@ const CreateScreen = ({ navigation }) => {
   const today = new Date();
 
 
-  const startDate = getFormatedDate(today.setDate(today.getDate() + 1),"YYYY/MM/DD");
+  const startDate = getFormatedDate(today.setDate(today.getDate() + 2),"YYYY/MM/DD");
   const [selectedStartDate, setSelectedStartDate] = useState(`${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()-1} 00:00`);
   const [startedDate, setStartedDate] = useState(`${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()-1} `);
   const dateString = selectedStartDate;
@@ -64,6 +64,8 @@ const CreateScreen = ({ navigation }) => {
     {key:'Data Science', value:'Data Science'},
     {key:'IT Automation', value:'IT Automation'},
     {key:'Web Development', value:'Web Development'},
+    {key:'Web 3.0', value:'Web 3.0'},
+    {key:'Others', value:'Others'},
   ]
 
 
@@ -74,11 +76,12 @@ const CreateScreen = ({ navigation }) => {
     try{
       if(email==""){
         alert("Oops! You need to login first");
-        navigation.replace('Login');
+        navigation.navigate('Login');
       }
       else if(!verified){
-        alert("Oops! Please verify your email first")
-        navigation.replace('Account Settings');
+        alert("Oops! Please verify your email first in Account/Account Settings")
+        navigation.navigate('Account');
+      
       }
       else if(title === "" ||
       description === "" ||
@@ -208,19 +211,19 @@ const CreateScreen = ({ navigation }) => {
         <View>
         <Text>Description</Text>
         <TextInput style={styles.input}  value={description}
-            onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} maxLength={200} />
+            onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} maxLength={200} minLe />
         </View>
-        <View style={{display: 'flex', flex: 1,width:321}}>
-          <Text>Category</Text>
-          <View style={{flex: 1}}>
-            <SelectList setSelected={setCategory} data={data} />
-          </View>
+              <View style={{display: 'flex', flex: 1, width: 321}}>
+        <Text>Category</Text>
+        <View style={{flex: 1}}>
+          <SelectList setSelected={ setCategory} data={data} />
         </View>
+      </View>
 
         <View>
         <Text>Organization</Text>
         <TextInput style={styles.input}  value={organization}
-            onChangeText={setOrganization} placeholder='Organization hosting the event' />
+            onChangeText={setOrganization} placeholder='Organization eg.(School, Company, Org)' />
         </View>
 
         

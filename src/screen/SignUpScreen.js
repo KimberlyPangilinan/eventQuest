@@ -3,7 +3,7 @@ import { View, ScrollView,Button, Text, StyleSheet, TextInput, Pressable, Alert,
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth,  } from "../config/firebase";
-
+import { CheckBox, Separator } from "react-native-btr";
 const SignUpScreen = ({navigation}) => {
 
   const [email, setEmail] = useState('');
@@ -58,16 +58,16 @@ const SignUpScreen = ({navigation}) => {
           returnKeyType='go'
           autoCorrect={false}
         />
-         <View style={{display:"flex",flexDirection:"row",gap:8,justifyItems:'center',alignItems:'center'}}>
-          <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
-            thumbColor={isShown ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#ffff"
-            onValueChange={()=>setIsShown(!isShown)}
-            value={isShown}
-          />
-          <Text style={{color: '#a0a0a0'}}>Show Password</Text>
-        </View>
+          <View style={{display:"flex",flexDirection:"row",justifyItems:'flex-start',alignItems:'flex-start',width:300}}>
+          <View style={{display:"flex",flexDirection:"row",justifyItems:'center',alignItems:'center'}}>
+            <CheckBox
+              checked={isShown}
+              color='#a0a0a0'
+              onPress={()=>setIsShown(!isShown)}
+            />
+            <Text> Show Password</Text>  
+          </View>
+      </View>
         <Pressable 
           style={styles.button}
           onPress={handleSignUp}

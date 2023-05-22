@@ -26,17 +26,18 @@ import { Btn } from './Btn';
 
 const Item = ({
   title,image,
-  id, when,
+  id, when,where,
   description,
   organization,
   category,
   email,
   onPress,
   backgroundColor,
-  textColor,
+  textColor,page
 }) => {
   const date = when.toDate();
   const formattedDate = `${date.getFullYear()}/${date.getMonth()+1 }/${date.getDate()} `;
+
   return(
   <TouchableOpacity
     onPress={onPress}
@@ -52,13 +53,15 @@ const Item = ({
     <View style={styles.itemInfo}>
       <View style={styles.itemHeader}>
         <Text style={styles.itemTitle}>{title}</Text>
-        <Text>{email}{email ? '|' : null} {formattedDate}</Text>
+        <Text>{email} </Text>
+        {page=="Events Registered"|| page=="Upcoming Events" ?<Text>{id}</Text> :<Text>When: {formattedDate}</Text>}
+        {page=="Events Registered" || page=="Upcoming Events"  ?null:<Text>Where: {where}</Text>}
       </View>
-      <View>
-        <Text style={styles.itemText}>
-       {category}
-        </Text>
-      </View>
+      {page=="Events Registered" || page=="Upcoming Events"  ?null: 
+      <View style={{display:'flex',flexDirection:'row'}}>
+        <Text style={styles.category}>{category}</Text>
+        <Text></Text>
+      </View>}
     </View>
   </TouchableOpacity>
 )};
@@ -70,6 +73,12 @@ const Seperator = () => (
 const Header = ({ title }) => (
   <View style={styles.menuContainer}>
     <Text style={styles.itemMenu}>{title}</Text>
+  </View>
+);
+
+const Empty = ({ title }) => (
+  <View style={styles.menuContainer}>
+    <Text>No events to display</Text>
   </View>
 );
 
@@ -128,7 +137,7 @@ const EventItem = ({ title, navigation }) => {
         break;
       default:
         
-        q = query(collection(db, 'events'), limit(limitValue), where('when', '>=', startOfToday), where('status', '==', "approved"));
+        q = query(collection(db, 'events'), limit(limitValue), where('when', '>', new Date()), where('status', '==', "approved"));
         break;
     }
 
@@ -161,7 +170,7 @@ const EventItem = ({ title, navigation }) => {
       return(
 
       title == "Upcoming Events"
-          ? <Item title = {item.eventTitle} id={item.id} when={item.when} image={item.image}
+          ? <Item title = {item.eventTitle} id={item.id} when={item.when} image={item.image} page="Upcoming Events"
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.eventID,
@@ -170,7 +179,7 @@ const EventItem = ({ title, navigation }) => {
                
           />:
       title=="Events Registered"
-      ? <Item title = {item.eventTitle} id={item.id} image={item.image}  when={item.when}
+      ? <Item title = {item.eventTitle} id={item.id} image={item.image}  when={item.when} page="Events Registered"
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.eventID,
@@ -180,7 +189,7 @@ const EventItem = ({ title, navigation }) => {
                
           />:
       title=="Events Created"
-      ? <Item title = {item.title} id={item.id} organization={item.organization}  image={item.image} email={item.email} when={item.when} where={item.where} category ={item.category}
+      ? <Item title = {item.title} id={item.id} organization={item.organization} page="Events Created"  image={item.image} email={item.email} when={item.when} where={item.where} category ={item.category}
                 onPress={() => {setSelectedId(item.id)
                 navigation.navigate('Details', {
                 itemId: item.id,
@@ -216,7 +225,9 @@ return (
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Seperator}
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={<Footer handleNumber={handleNumber} isLoading={isLoading} />}
+        ListFooterComponent={title=="Upcoming Events"|| title=="Events Registered"|| title=="Events Created" ? null: <Footer handleNumber={handleNumber} isLoading={isLoading} />}
+        ListEmptyComponent={Empty}
+
       />
     </View>
   )
@@ -231,6 +242,16 @@ const styles = StyleSheet.create({
       flexDirection:'row',
       justifyContent:'space-between',
       minWidth:320
+    },
+    category:{
+      backgroundColor:'#e7e5f5',
+      paddingVertical:4,
+      paddingHorizontal:8,
+      borderRadius:4,
+      color:'#654dff',
+      textTransform:'uppercase',
+      fontSize:12,
+     
     },
     itemInfo:{
       flexDirection:'column', gap:16,width:'100%',flexGrow:1,marginLeft:8

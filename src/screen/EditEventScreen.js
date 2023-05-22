@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Image, ScrollView, FlatList, TextInput, Text,Button, View, Pressable, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native';
+import {Image, ScrollView, FlatList, TextInput, Text,Button, View, Pressable, StyleSheet, TouchableOpacity,ActivityIndicator,Alert } from 'react-native';
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
 import { db,auth } from '../config/firebase';
 import {  getDoc, where, deleteDoc,query, doc, updateDoc } from 'firebase/firestore';
@@ -31,7 +31,7 @@ const EditEventScreen = ({ navigation,route }) => {
     const { month1 } = route.params;
   const { day1 } = route.params;
   const { year1 } = route.params;
-  const [selectedStartDate, setSelectedStartDate] = useState(`${year1}/${month1}/${day1} 00:00`);
+  const [selectedStartDate, setSelectedStartDate] = useState(`${year1}/${month1+1}/${day1} 00:00`);
   const dateString = selectedStartDate;
   const dateParts = dateString.split("/");
   const year = parseInt(dateParts[0], 10);
@@ -39,7 +39,7 @@ const EditEventScreen = ({ navigation,route }) => {
   const day = parseInt(dateParts[2].substr(0, 2), 10);
   const hour = parseInt(dateParts[2].substr(3, 2), 10);
   const minute = parseInt(dateParts[2].substr(6, 2), 10);
-  const dateObj = new Date(year, month, day, hour, minute);
+  const dateObj = new Date(year, month-1, day, hour, minute);
   const { itemId } = route.params;
   const { imagePrev } = route.params;
   const { startedDate } = route.params;
@@ -104,7 +104,7 @@ const EditEventScreen = ({ navigation,route }) => {
         eventStatus:eventStatus? eventStatus: '',
         email:auth.currentUser?.email,
 
-        image:imagePrev? imagePrev: image
+        image: image
        })
       
       
@@ -118,18 +118,33 @@ const EditEventScreen = ({ navigation,route }) => {
      
     }}
     const deleteEvent = async () => {
-      try{
-        await deleteDoc(doc(db, "events", itemId));
-        
-        alert("Event successfully deleted.")
-        navigation.replace('MyApp');
-  
-      }
-      catch (error) {
-        alert(error);
     
-       
-      }} 
+        Alert.alert('Delete', 'Are you sure you want to delete this event?', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Delete cancelled'),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: async () => {
+              try {
+                await deleteDoc(doc(db, "events", itemId));
+        
+                alert("Event successfully deleted.")
+                navigation.replace('MyApp');
+                
+      
+
+              } catch (error) {
+                console.log('Error deleting:', error.message);
+              }
+              navigation.replace('MyApp');
+            },
+          },
+        ]);
+      };
+      
    
     const pickImage = async () => {
       // No permissions request is necessary for launching the image library
@@ -224,12 +239,7 @@ const EditEventScreen = ({ navigation,route }) => {
         <TextInput style={styles.input}  value={description}
             onChangeText={setDescription} placeholder='A short Descrription about your event' multiline={true} />
         </View>
-        <View style={{display: 'flex', flex: 1,width:321}}>
-          <Text>Category</Text>
-          <View style={{flex: 1}}>
-            <SelectList setSelected={setCategory}  data={data}  placeholder={category} value={category} />
-          </View>
-        </View>
+        
         <View>
         <Text>Organization</Text>
         <TextInput style={styles.input}  value={organization}

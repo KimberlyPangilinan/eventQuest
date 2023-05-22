@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.content}>
         
           <View>
-            <EventItem title="All Events and Webinars"  navigation={navigation}/>
+            <EventItem title="Recent and Upcoming Events"  navigation={navigation}/>
           </View> 
       </View>
     </View>

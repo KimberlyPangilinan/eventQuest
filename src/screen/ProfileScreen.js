@@ -294,19 +294,24 @@ export default function ProfileScreen({ navigation }) {
     };
     fetchProfile();
   }, [name,navigation]);
-  const handleSignOut=async()=>{
-    signOut(auth).then(() => {
-      console.log('sign out');
-      navigation.replace('MyApp');
+  const handleSignOut = async () => {
+
+          try {
+            await signOut(auth);
+            console.log('Signed out successfully');
+            navigation.replace('MyApp');
+            
+            await AsyncStorage.removeItem('isLogged');
+            await AsyncStorage.removeItem('userToken');
+            await AsyncStorage.removeItem('userEmail');
+            await AsyncStorage.removeItem('userPassword');
+          } catch (error) {
+            console.log('Error signing out:', error.message);
+          }
+        
       
-    }).catch((error) => {
-      // An error happened.
-    });
-    await AsyncStorage.removeItem('isLogged');
-    await AsyncStorage.removeItem('userToken');
-    await AsyncStorage.removeItem('userEmail');
-    await AsyncStorage.removeItem('userPassword');
-  }
+    
+  };
   
   const [isLoggedIn,setIsLoggedIn] = useState('');
 

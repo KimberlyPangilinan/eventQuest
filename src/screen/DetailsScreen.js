@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,ScrollView, View, Button,StyleSheet,Image, Pressable,ActivityIndicator , Alert} from 'react-native';
+import { Text,ScrollView, View, Button,StyleSheet,Image, Pressable,ActivityIndicator , Alert,Modal} from 'react-native';
 import { Btn } from '../components/Btn';
 import { collection, addDoc, getDocs,getDoc, where, query, doc, updateDoc,deleteDoc } from 'firebase/firestore';
 import { db,auth } from '../config/firebase';
@@ -9,6 +9,7 @@ import EditEventScreen from './EditEventScreen';
 export default function DetailsScreen({ route, navigation }) {
   const [isLoggedIn, setIsLoggedIn] = React.useState("");
   const [name, setName] = React.useState("");
+  const [modalVisible, setModalVisible] = React.useState(false);
   const [isRegistered, setIsRegistered] = React.useState("Register");
   const [isDisabled, setIsDisabled] = React.useState(false);
   const [description, setDescription] = React.useState("");
@@ -136,7 +137,7 @@ export default function DetailsScreen({ route, navigation }) {
       const docRef = await addDoc(collection(db, "registration"), {
         eventID: itemId,
         eventTitle: title,
-        name: name,
+        name: auth.currentUser?.displayName,
         email: auth.currentUser?.email,
         when: timestamp,
         dateRegistered: new Date(),
@@ -156,7 +157,7 @@ export default function DetailsScreen({ route, navigation }) {
     }
   };
   const handlePress = () => {
-    setIsOpen(!isOpen);
+    setModalVisible(true);
   };
 
   return (
@@ -168,12 +169,19 @@ export default function DetailsScreen({ route, navigation }) {
        
        
        :
-       <><Text style={styles.heading}>{title}</Text>
+       <View style={{textAlign:'left',gap:4,width:'100%'}}>
+
+      <View style={{display:'flex',flexDirection:'row'}}>
+        <Text style={styles.category}>{category}</Text>
+        <Text></Text>
+      </View>
+
+      <Text style={styles.heading}>{title}</Text>
       <Text>by: {email}{organization}</Text>
       <Text>Event ID: {itemId}</Text>
-      <Text> {when} | {where1}</Text>
-      <Text>{page=="Events Created"? status +' |' :null} {eventStatus}</Text>
-      <Text>Description: {JSON.stringify(description)}</Text></>}
+      <Text>{when} | {where1}</Text>
+      <Text style={styles.status}>{page=="Events Created"? status +' | ' :null}{eventStatus==''?'Event Approved':eventStatus}</Text>
+      <Text>Description: {JSON.stringify(description)}</Text></View>}
       
       {page === "Events Created" && (
         <>
@@ -194,8 +202,30 @@ export default function DetailsScreen({ route, navigation }) {
               })
             }
           />
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}><RegList itemId={itemId} /></Text>
+            <Pressable style={styles.category}
+             
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text >Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+   
+        <Btn name="View participants"  onPress={() => setModalVisible(true)} type="btnSecondary" disabled={false} />
+
           <Pressable onPress={handlePress}>
-            <Btn name="View participants" type="btnSecondary" disabled={isDisabled} />
+           
           </Pressable>
         </>
       )}
@@ -212,7 +242,9 @@ export default function DetailsScreen({ route, navigation }) {
       />
     )}
 
-    {isOpen && <RegList itemId={itemId} />}
+    {isOpen && <View>
+    
+    </View>}
     
     </ScrollView>
   );
@@ -220,9 +252,65 @@ export default function DetailsScreen({ route, navigation }) {
 
 
 const styles= StyleSheet.create({
+  category:{
+    backgroundColor:'#e7e5f5',
+    paddingVertical:4,
+    paddingHorizontal:8,
+    borderRadius:4,
+    color:'#654dff',
+    textTransform:'uppercase',
+    fontSize:12,
+   
+  },
+  status:{
+    backgroundColor:'#e7e6ec',
+    paddingVertical:4,
+    paddingHorizontal:8,
+    borderRadius:4,
+    color:'black',
+    textTransform:'uppercase',
+    fontSize:12,
+    marginVertical:8
+  },
+
   heading: {
     fontWeight:'bold',
-    textAlign:'center',
-    fontSize:24
-  }
+    fontSize:24,
+    marginBottom:8
+  }, buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    width:'88%',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
 })

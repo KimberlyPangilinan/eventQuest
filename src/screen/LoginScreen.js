@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, ScrollView, Text, StyleSheet, TextInput, Pressable,Switch } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, TextInput, Pressable,Switch,Image,Alert } from 'react-native';
 import { signInWithEmailAndPassword,sendSignInLinkToEmail,sendPasswordResetEmail,signInWithRedirect  } from 'firebase/auth';
 import { auth,provider } from '../config/firebase';
+import Ionicons from '@expo/vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CheckBox, Separator } from "react-native-btr";
 const actionCodeSettings = {
   // URL you want to redirect back to. The domain (www.example.com) for this
   // URL must be in the authorized domains list in the Firebase Console.
@@ -68,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
         // ...
       });
     } catch (error) {
-      alert(error.message);
+      alert("Sorry! Google Sign in is currently unavailable, we are still fixing this issue");
     }
   };
   const emailSignIn = useCallback(async () => {
@@ -93,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       // ...
-      alert(error)});
+      alert("Sorry! Email Sign in is currently unavailable, we are still fixing this issue")});
   }, [auth, email, actionCodeSettings]);
   const handleSignIn = useCallback(async () => {
     try {
@@ -128,11 +130,11 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <ScrollView keyboardDismissMode="interactive" contentContainerStyle={styles.container}>
-      <View style={styles.welcome}>
-        
-       <Pressable onPress={() => {
-              navigation.navigate('MyApp');
-            }} ><Text style={styles.title}>EventQuest</Text></Pressable> 
+      <View style={styles.welcome}>       
+        <Pressable onPress={() => {
+                navigation.navigate('MyApp');
+              }} ><Text style={styles.title}>EventQuest</Text>
+        </Pressable> 
         <Text style={styles.subtitle}>Please login to continue.</Text>
       </View>
       <View style={styles.form}>
@@ -155,23 +157,23 @@ const LoginScreen = ({ navigation }) => {
           returnKeyType='go'
           autoCorrect={false}
         />
-      
-        <Pressable onPress={forgotPass}>
-          <Text style={styles.link}>
-           <Text style={styles.linkHighlight}>Forgot password?</Text>
-          </Text>
-        </Pressable>
-        <View style={{display:"flex",flexDirection:"row",gap:8,justifyItems:'center',alignItems:'center'}}>
-          <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
-            thumbColor={isShown ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#ffff"
-            onValueChange={()=>setIsShown(!isShown)}
-            value={isShown}
-          />
-          
-          <Text style={{color: '#a0a0a0'}}>Show Password</Text>
-        </View>
+      <View style={{display:"flex",flexDirection:"row"}}>
+          <View style={{display:"flex",flexDirection:"row",justifyItems:'space-around',width:200,alignItems:'center'}}>
+            <CheckBox
+              checked={isShown}
+              color='#a0a0a0'
+              onPress={()=>setIsShown(!isShown)}
+            />
+            <Text> Show Password</Text>  
+          </View>
+          <Pressable onPress={forgotPass}>
+            <Text style={styles.link}>
+            <Text style={styles.linkHighlight}>Forgot password?</Text>
+            </Text>
+          </Pressable>
+
+      </View>
+        
 
         <Pressable style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Login</Text>
@@ -181,9 +183,19 @@ const LoginScreen = ({ navigation }) => {
             Don't have any account yet? <Text style={styles.linkHighlight}>Sign Up</Text>
           </Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={signUpWithGoogle}>
-          <Text style={styles.buttonText}>Google</Text>
+        <Text style={styles.link1}>
+           or continue with</Text>
+          
+        <Pressable style={styles.buttonGoogle} onPress={signUpWithGoogle}>
+      
+        <Image
+        style={{width:32,height:32}}
+        source={{
+          uri: 'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-icon-png-transparent-background-osteopathy-16.png',
+        }}
+      />
         </Pressable>
+      
       </View>
     </ScrollView>
   );
@@ -197,19 +209,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcome: {
-    
-    flex: 1.2,
+    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   form: {
     backgroundColor: '#fff',
     borderTopLeftRadius:64,
-    flex: 3,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     padding:'10%',
+   
+   
+  
   },
   title: {
     fontSize: 32,
@@ -243,13 +257,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop:40
   },
+  buttonGoogle: {
+   
+    borderRadius: 8,
+   
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:16
+  },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
   link:{
-    marginTop:32,
+    marginVertical:16
+  },
+  link1:{
+    marginVertical:16,
+    color:'#a0a0a0',
   },
   linkHighlight:{
     color:'blue'

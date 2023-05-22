@@ -51,19 +51,19 @@ import {
                     onDateChanged={onDateChanged}
                     onSelectedChange={onSelectedChange}
                     options={{
-                      backgroundColor: "#080516",
-                      textHeaderColor: "#469ab6",
-                      textDefaultColor: "#FFFFFF",
+                      backgroundColor: "#fff",
+                      textHeaderColor: '#654dff',
+                      textDefaultColor: "black",
                       selectedTextColor: "#FFF",
-                      mainColor: "#469ab6",
+                      mainColor: '#654dff',
                       textSecondaryColor: "#FFFFFF",
-                      borderColor: "rgba(122, 146, 165, 0.1)",
+                      borderColor: "#fff",
                     }}
                   />
               
                   
                   <TouchableOpacity onPress={handleOnPressStartDate}>
-                    <Text style={{ color: "white" }}>Close</Text>
+                    <Text style={{ color: '#654dff' }}>Close</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -89,7 +89,7 @@ import {
         borderRadius:8
       },
       submitBtn: {
-        backgroundColor: "#342342",
+        backgroundColor: '#654dff',
         paddingVertical: 22,
         alignItems: "center",
         justifyContent: "center",
@@ -100,7 +100,7 @@ import {
    
     modalView: {
       margin: 20,
-      backgroundColor: "#080516",
+      backgroundColor: "#fff",
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 20,

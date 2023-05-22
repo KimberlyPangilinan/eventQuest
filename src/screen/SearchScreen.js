@@ -35,7 +35,7 @@ const SearchScreen = ({ navigation }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, "events"), where('status', '==', "approved"));
+    const q = query(collection(db, 'events'),  where('when', '>=', new Date()), where('status', '==', "approved"));
     const unsubscribeevents = onSnapshot(q, (querySnapshot) => {
       const events = [];
       querySnapshot.forEach((doc) => {
